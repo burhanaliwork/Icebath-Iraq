@@ -419,6 +419,88 @@
   }
   .product-chip.selected{border-color:var(--ice);background:var(--frost);color:var(--ice-deep);}
 
+
+  /* ---------- Cart button ---------- */
+  .cart-btn{
+    display:inline-flex;align-items:center;gap:.35rem;
+    padding:.55rem 1rem;border-radius:100px;
+    border:1.5px solid var(--border);background:var(--white);
+    cursor:pointer;font-family:'Tajawal',sans-serif;font-weight:700;font-size:.95rem;color:var(--navy);
+    transition:border-color .2s,color .2s;
+  }
+  .cart-btn:hover{border-color:var(--ice);color:var(--ice-deep);}
+  .cart-badge{
+    background:var(--ice-deep);color:#fff;
+    border-radius:100px;font-size:.7rem;font-weight:800;
+    min-width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;padding:0 4px;
+  }
+  .cart-badge.hidden{display:none;}
+
+  /* ---------- Cart drawer ---------- */
+  .cart-overlay{
+    position:fixed;inset:0;z-index:600;
+    background:rgba(14,42,82,.45);backdrop-filter:blur(4px);
+    display:none;
+  }
+  .cart-overlay.active{display:block;}
+  .cart-drawer{
+    position:fixed;top:0;right:0;bottom:0;
+    width:min(440px,100%);
+    background:var(--white);z-index:601;
+    transform:translateX(100%);
+    transition:transform .4s var(--ease);
+    display:flex;flex-direction:column;
+    box-shadow:-8px 0 40px rgba(14,42,82,.15);
+  }
+  .cart-overlay.active .cart-drawer{transform:translateX(0);}
+  .cart-head{
+    padding:1.3rem 1.5rem;border-bottom:1px solid var(--border);
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .cart-head h3{font-family:'Tajawal',sans-serif;color:var(--navy);font-size:1.2rem;margin:0;}
+  .cart-close{background:none;border:none;cursor:pointer;font-size:1.3rem;color:var(--slate);padding:.2rem;}
+  .cart-items-wrap{flex:1;overflow-y:auto;padding:.8rem 1.5rem;}
+  .cart-item{
+    display:flex;align-items:center;gap:.8rem;
+    padding:.85rem 0;border-bottom:1px solid var(--border);
+  }
+  .cart-item-name{flex:1;font-weight:700;color:var(--navy);font-size:.93rem;line-height:1.3;}
+  .cart-item-price{color:var(--ice-deep);font-family:'Tajawal',sans-serif;font-weight:800;font-size:.88rem;white-space:nowrap;}
+  .qty-control{display:flex;align-items:center;gap:.3rem;}
+  .qty-btn{
+    width:28px;height:28px;border-radius:50%;
+    background:var(--frost);border:1px solid var(--border);
+    cursor:pointer;font-size:1rem;color:var(--navy);
+    display:flex;align-items:center;justify-content:center;
+    transition:background .2s;
+  }
+  .qty-btn:hover{background:var(--frost-2);}
+  .qty-num{font-weight:800;min-width:22px;text-align:center;color:var(--navy);}
+  .cart-empty-msg{text-align:center;padding:2.5rem 1rem;color:var(--slate-light);}
+  .cart-empty-msg .empty-ico{font-size:2.5rem;margin-bottom:.4rem;}
+  .cart-footer{padding:1.1rem 1.5rem;border-top:1px solid var(--border);}
+  .cart-total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;}
+  .cart-total-row span{font-weight:700;color:var(--navy);}
+  .cart-total-row strong{font-family:'Tajawal',sans-serif;font-weight:900;font-size:1.25rem;color:var(--ice-deep);}
+  .checkout-fields{display:flex;flex-direction:column;gap:.6rem;margin-bottom:.8rem;}
+  .checkout-fields input,.checkout-fields select,.checkout-fields textarea{
+    padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:10px;
+    font-family:inherit;font-size:.92rem;color:var(--navy);
+    outline:none;background:var(--white);direction:rtl;
+    transition:border-color .25s;
+  }
+  .checkout-fields input:focus,.checkout-fields select:focus,.checkout-fields textarea:focus{border-color:var(--ice);}
+  .checkout-fields textarea{resize:none;height:68px;}
+  .cart-submit-btn{width:100%;padding:.9rem;}
+  .cart-success-box{display:none;text-align:center;padding:1rem 0;}
+  .cart-success-box .ok-ico{font-size:2.5rem;margin-bottom:.4rem;}
+  .cart-success-box h4{font-family:'Tajawal',sans-serif;color:var(--navy);margin-bottom:.3rem;}
+  .cart-success-box p{font-size:.88rem;color:var(--slate);}
+
+  /* ---------- Product image ---------- */
+  .product-img-wrap{padding:0!important;overflow:hidden;border-radius:16px 16px 0 0;}
+  .product-real-img{width:100%;height:240px;object-fit:cover;display:block;}
+
 </style>
 </head>
 <body>
@@ -433,13 +515,13 @@
       <ul>
         <li><a href="#top" class="nav-link">الرئيسية</a></li>
         <li><a href="#products" class="nav-link">منتجاتنا</a></li>
-        <li><a href="#benefits" class="nav-link">الفوائد</a></li>
-        <li><a href="#how" class="nav-link">كيف تطلب</a></li>
-        <li><a href="#order" class="nav-link">تواصل معنا</a></li>
       </ul>
     </nav>
     <div class="nav-cta">
-      <a href="#order" class="btn btn-ghost">تواصل معنا</a>
+      <button class="cart-btn" id="cartOpenBtn" onclick="openCart()" aria-label="السلة">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+        <span class="cart-badge hidden" id="cartBadge">0</span>
+      </button>
       <button class="menu-toggle" id="menuToggle" aria-label="فتح القائمة"><span></span><span></span><span></span></button>
     </div>
   </div>
@@ -462,7 +544,6 @@
         </div>
         <div class="cta-row">
           <a href="#order" class="btn btn-primary">اطلب حوضك الآن</a>
-          <a href="#benefits" class="btn btn-ghost">ليش تحتاج</a>
         </div>
       </div>
 
@@ -481,134 +562,44 @@
     </div>
   </section>
 
-  <!-- BENEFITS accordion -->
-  <section id="benefits">
-    <div class="container">
-      <div class="faq-list reveal">
-        <div class="faq-item">
-          <button class="faq-btn" aria-expanded="false">
-            <span>ليش Ice Bath يسرّع تعافي العضلات؟</span>
-            <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="faq-body">يقلل الالتهاب والتعب بعد التمرين، ويسرّع رجوع عضلاتك لوضعها الطبيعي — يعني تقدر تتمرن أكثر وتتعافى أسرع.</div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-btn" aria-expanded="false">
-            <span>كيف يحسّن التركيز والوضوح الذهني؟</span>
-            <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="faq-body">الماء البارد يصحّي جسمك وعقلك فوراً، ويرفع مستوى اليقظة والانتباه — صحوة حقيقية بدون قهوة.</div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-btn" aria-expanded="false">
-            <span>شلون يقوّي المناعة والدورة الدموية؟</span>
-            <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="faq-body">التعرض المنتظم للبرد يقوّي جهاز المناعة ويحسّن الدورة الدموية بشكل ملحوظ — جسمك يصير أقوى من الداخل.</div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-btn" aria-expanded="false">
-            <span>ليش يبني قوة التحمل الذهنية؟</span>
-            <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="faq-body">كل نزلة بالحوض تدرّب عقلك يتحمل الضغط، وتبني انضباط حقيقي يوم بعد يوم — مو بس جسمك، عقلك يتحسن.</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- PRODUCTS -->
   <section id="products">
     <div class="container">
       <div class="section-head center reveal">
         <span class="eyebrow">منتجاتنا</span>
         <h2>اختار حوضك</h2>
-        <p>حاليًا متوفر عندنا قياسين. صور المنتجات الحقيقية راح تنضاف قريبًا.</p>
+
       </div>
       <div class="products-grid">
 
         <div class="product-card reveal">
           <span class="product-badge">الأكثر طلبًا</span>
-          <div class="product-visual">
-            <svg viewBox="0 0 100 100" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-              <ellipse cx="50" cy="34" rx="33" ry="13"/>
-              <path d="M17 34v27c0 9.5 14.8 15.3 33 15.3s33-5.8 33-15.3V34"/>
-              <rect x="37" y="22" width="13" height="13" rx="2.5" transform="rotate(14 43.5 28.5)"/>
-              <rect x="50" y="18" width="13" height="13" rx="2.5" transform="rotate(-11 56.5 24.5)"/>
-            </svg>
-            <span class="product-note">الصورة الفعلية للمنتج قريبًا</span>
+          <div class="product-visual product-img-wrap">
+            <img src="/product1.png" alt="الحوض الأساسي Ice Bath" class="product-real-img" loading="lazy">
           </div>
           <div class="product-info">
             <h3>الحوض الأساسي</h3>
             <p>مثالي للاستخدام اليومي بالبيت — سهل التعبئة والتفريغ، وياخذ مساحة قليلة.</p>
             <div class="product-price">85,000 <span>دينار عراقي</span></div>
-            <button class="btn btn-primary order-trigger" data-product="الحوض الأساسي">اطلب الحين</button>
+            <button class="btn btn-primary add-to-cart" data-product="الحوض الأساسي">أضف للسلة 🛒</button>
           </div>
         </div>
 
         <div class="product-card reveal">
           <span class="product-badge">للمحترفين</span>
-          <div class="product-visual">
-            <svg viewBox="0 0 100 100" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-              <ellipse cx="50" cy="30" rx="38" ry="14"/>
-              <path d="M12 30v33c0 10 17 16.5 38 16.5s38-6.5 38-16.5V30"/>
-              <rect x="34" y="17" width="14" height="14" rx="2.5" transform="rotate(14 41 24)"/>
-              <rect x="49" y="13" width="14" height="14" rx="2.5" transform="rotate(-11 56 20)"/>
-              <rect x="46" y="30" width="14" height="14" rx="2.5" transform="rotate(6 53 37)"/>
+          <div class="product-visual product-img-wrap" style="background:var(--frost-2);display:flex;align-items:center;justify-content:center;min-height:220px;">
+            <svg viewBox="0 0 100 100" fill="none" stroke="var(--ice)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="90" height="90" opacity=".5">
+              <ellipse cx="50" cy="30" rx="38" ry="14"/><path d="M12 30v33c0 10 17 16.5 38 16.5s38-6.5 38-16.5V30"/>
             </svg>
-            <span class="product-note">الصورة الفعلية للمنتج قريبًا</span>
           </div>
           <div class="product-info">
             <h3>الحوض الاحترافي XL</h3>
             <p>حجم أكبر وعزل حراري أقوى — مثالي للرياضيين وجلسات الانغماس الأطول.</p>
             <div class="product-price">85,000 <span>دينار عراقي</span></div>
-            <button class="btn btn-primary order-trigger" data-product="الحوض الاحترافي XL">اطلب الحين</button>
+            <button class="btn btn-primary add-to-cart" data-product="الحوض الاحترافي XL">أضف للسلة 🛒</button>
           </div>
         </div>
 
-      </div>
-    </div>
-  </section>
-
-  <!-- HOW TO ORDER -->
-  <section id="how" style="background:var(--frost);">
-    <div class="container">
-      <div class="section-head center reveal">
-        <span class="eyebrow">خطوات بسيطة</span>
-        <h2>كيف تطلب حوضك؟</h2>
-        <p>من أول رسالة لين توصلك الطلبية — الطريق واضح وسريع.</p>
-      </div>
-      <div class="steps">
-        <div class="step-card reveal">
-          <div class="step-num">01</div>
-          <h3>تواصل وحدد قياسك</h3>
-          <p>كلّمنا على واتساب أو انستغرام واختار الحجم المناسب إلك.</p>
-        </div>
-        <div class="step-card reveal">
-          <div class="step-num">02</div>
-          <h3>نأكد الطلب</h3>
-          <p>نثبت طلبك وعنوانك، ونحدد وقت التوصيل المناسب إلك.</p>
-        </div>
-        <div class="step-card reveal">
-          <div class="step-num">03</div>
-          <h3>التوصيل لباب بيتك</h3>
-          <p>حوضك يوصلك مجاناً لأي محافظة داخل العراق.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
-
-  <!-- FINAL CTA -->
-  <section class="final-cta" id="order">
-    <div class="container">
-      <div class="card reveal">
-        <h2>جاهز تستعد بقوة وترتاح بسرعة؟</h2>
-        <p>احجز حوضك الحين وابدأ روتين التعافي الصح — توصيل مجاني لباب بيتك بكل محافظات العراق.</p>
-        <div class="cta-row">
-          <button class="btn btn-white order-trigger" data-product="">اطلب حوضك الحين ❄️</button>
-        </div>
       </div>
     </div>
   </section>
@@ -626,11 +617,9 @@
     </div>
     <div class="foot-links">
       <a href="#products">منتجاتنا</a>
-      <a href="#benefits">الفوائد</a>
-      <a href="#how">كيف تطلب</a>
-      <a href="#order">تواصل معنا</a>
       <a href="https://instagram.com/icebath.iraq" target="_blank" rel="noopener" class="foot-insta" aria-label="انستغرام">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        <span style="font-size:.85rem;font-weight:600;">@icebath.iraq</span>
       </a>
     </div>
   </div>
@@ -730,135 +719,163 @@
 </script>
 
 
-<!-- ORDER MODAL -->
-<div class="order-overlay" id="orderOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-  <div class="order-modal">
-    <button class="close-btn" id="closeModal" aria-label="إغلاق">✕</button>
-    <h3 id="modalTitle">اطلب حوضك ❄️</h3>
-    <div id="orderFormWrap">
-      <div class="product-select-row" id="productChips">
-        <div class="product-chip" data-val="الحوض الأساسي">الأساسي</div>
-        <div class="product-chip" data-val="الحوض الاحترافي XL">الاحترافي XL</div>
-      </div>
-      <input type="hidden" id="selectedProduct" value="">
-      <form id="orderForm" novalidate>
-        <div class="order-field">
-          <label for="oName">الاسم الكامل *</label>
-          <input type="text" id="oName" placeholder="اسمك الكامل" required>
-        </div>
-        <div class="order-field">
-          <label for="oPhone">رقم الهاتف *</label>
-          <input type="tel" id="oPhone" placeholder="07XX XXX XXXX" required>
-        </div>
-        <div class="order-field">
-          <label for="oGov">المحافظة *</label>
-          <select id="oGov" required>
-            <option value="">اختار محافظتك</option>
-            <option>بغداد</option><option>البصرة</option><option>الموصل</option>
-            <option>أربيل</option><option>النجف</option><option>كربلاء</option>
-            <option>السليمانية</option><option>الأنبار</option><option>ذي قار</option>
-            <option>دهوك</option><option>كركوك</option><option>ديالى</option>
-            <option>ميسان</option><option>صلاح الدين</option><option>واسط</option>
-            <option>المثنى</option><option>القادسية</option><option>بابل</option>
-          </select>
-        </div>
-        <div class="order-field">
-          <label for="oAddr">العنوان التفصيلي *</label>
-          <textarea id="oAddr" placeholder="الحي، الشارع، رقم البيت..." required></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary order-submit">إرسال الطلب ❄️</button>
-      </form>
+
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cartOverlay">
+  <div class="cart-drawer" role="dialog" aria-label="سلة الطلب">
+    <div class="cart-head">
+      <h3>🛒 سلة الطلب</h3>
+      <button class="cart-close" id="cartCloseBtn" aria-label="إغلاق">✕</button>
     </div>
-    <div class="order-success" id="orderSuccess">
-      <div class="ok-icon">✅</div>
-      <h4>تم استلام طلبك!</h4>
-      <p>راح نتواصل معك قريباً على رقمك لتأكيد الطلب وتحديد موعد التوصيل.</p>
+
+    <div class="cart-items-wrap">
+      <div class="cart-empty-msg" id="cartEmptyMsg">
+        <div class="empty-ico">🧊</div>
+        <p>السلة فارغة — أضف منتج!</p>
+      </div>
+      <div id="cartItemsList"></div>
+    </div>
+
+    <div class="cart-footer" id="cartFooter" style="display:none;">
+      <div class="cart-total-row">
+        <span>المجموع</span>
+        <strong id="cartTotalEl">0 د.ع</strong>
+      </div>
+      <div id="cartFormSection">
+        <form id="cartOrderForm" novalidate>
+          <div class="checkout-fields">
+            <select id="cGov" required>
+              <option value="">اختار محافظتك *</option>
+              <option>بغداد</option><option>البصرة</option><option>الموصل</option>
+              <option>أربيل</option><option>النجف</option><option>كربلاء</option>
+              <option>السليمانية</option><option>الأنبار</option><option>ذي قار</option>
+              <option>دهوك</option><option>كركوك</option><option>ديالى</option>
+              <option>ميسان</option><option>صلاح الدين</option><option>واسط</option>
+              <option>المثنى</option><option>القادسية</option><option>بابل</option>
+            </select>
+            <input type="tel" id="cPhone" placeholder="رقم الهاتف *" required>
+            <textarea id="cAddr" placeholder="العنوان التفصيلي — الحي، الشارع، رقم البيت *" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary cart-submit-btn">إرسال الطلب ❄️</button>
+        </form>
+      </div>
+      <div class="cart-success-box" id="cartSuccessBox">
+        <div class="ok-ico">✅</div>
+        <h4>تم استلام طلبك!</h4>
+        <p>راح نتواصل معك قريباً لتأكيد الطلب وتحديد موعد التوصيل.</p>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-// ── FAQ accordion
-document.querySelectorAll('.faq-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const item = btn.closest('.faq-item');
-    const isOpen = item.classList.contains('open');
-    document.querySelectorAll('.faq-item').forEach(i => {
-      i.classList.remove('open');
-      i.querySelector('.faq-btn').setAttribute('aria-expanded','false');
-    });
-    if (!isOpen) {
-      item.classList.add('open');
-      btn.setAttribute('aria-expanded','true');
-    }
-  });
-});
+// ─── Cart system ───────────────────────────────────
+const PRICE = 85000;
+let cart = {};
 
-// ── Order modal
-const overlay = document.getElementById('orderOverlay');
-const closeBtn = document.getElementById('closeModal');
-const orderForm = document.getElementById('orderForm');
-const orderSuccess = document.getElementById('orderSuccess');
-const orderFormWrap = document.getElementById('orderFormWrap');
-const selectedProductInput = document.getElementById('selectedProduct');
-const chips = document.querySelectorAll('.product-chip');
+function formatPrice(n) {
+  return n.toLocaleString() + ' د.ع';
+}
+function getTotal() {
+  return Object.entries(cart).reduce((s,[,q]) => s + q * PRICE, 0);
+}
+function getTotalQty() {
+  return Object.values(cart).reduce((s,q) => s + q, 0);
+}
 
-function openModal(product) {
-  overlay.classList.add('active');
-  document.body.style.overflow = 'hidden';
-  orderForm.reset();
-  orderSuccess.style.display = 'none';
-  orderFormWrap.style.display = 'block';
-  // pre-select product chip
-  chips.forEach(c => {
-    c.classList.toggle('selected', c.dataset.val === product);
-    if (c.dataset.val === product) selectedProductInput.value = product;
-  });
-  if (!product) {
-    chips.forEach(c => c.classList.remove('selected'));
-    selectedProductInput.value = '';
+function renderCart() {
+  const badge   = document.getElementById('cartBadge');
+  const emptyMsg= document.getElementById('cartEmptyMsg');
+  const list    = document.getElementById('cartItemsList');
+  const footer  = document.getElementById('cartFooter');
+  const totalEl = document.getElementById('cartTotalEl');
+
+  const items = Object.entries(cart).filter(([,q]) => q > 0);
+  const totalQty = getTotalQty();
+
+  badge.textContent = totalQty;
+  badge.classList.toggle('hidden', totalQty === 0);
+
+  if (items.length === 0) {
+    emptyMsg.style.display = 'block';
+    footer.style.display = 'none';
+    list.innerHTML = '';
+  } else {
+    emptyMsg.style.display = 'none';
+    footer.style.display = 'block';
+    list.innerHTML = items.map(([name, qty]) =>
+      `<div class="cart-item">
+        <div class="cart-item-name">${name}</div>
+        <div class="qty-control">
+          <button class="qty-btn" onclick="changeQty('${name}',-1)">−</button>
+          <span class="qty-num">${qty}</span>
+          <button class="qty-btn" onclick="changeQty('${name}',1)">+</button>
+        </div>
+        <div class="cart-item-price">${formatPrice(qty * PRICE)}</div>
+      </div>`
+    ).join('');
+    totalEl.textContent = formatPrice(getTotal());
   }
 }
 
-function closeModal() {
-  overlay.classList.remove('active');
+function changeQty(name, delta) {
+  cart[name] = (cart[name] || 0) + delta;
+  if (cart[name] <= 0) delete cart[name];
+  renderCart();
+}
+
+function openCart() {
+  document.getElementById('cartOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  renderCart();
+}
+
+function closeCart() {
+  document.getElementById('cartOverlay').classList.remove('active');
   document.body.style.overflow = '';
 }
 
-document.querySelectorAll('.order-trigger').forEach(btn => {
-  btn.addEventListener('click', () => openModal(btn.dataset.product || ''));
+document.getElementById('cartCloseBtn').addEventListener('click', closeCart);
+document.getElementById('cartOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeCart();
 });
 
-closeBtn.addEventListener('click', closeModal);
-overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-chips.forEach(c => {
-  c.addEventListener('click', () => {
-    chips.forEach(x => x.classList.remove('selected'));
-    c.classList.add('selected');
-    selectedProductInput.value = c.dataset.val;
+document.querySelectorAll('.add-to-cart').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const p = btn.dataset.product;
+    cart[p] = (cart[p] || 0) + 1;
+    openCart();
+    renderCart();
   });
 });
 
-orderForm.addEventListener('submit', e => {
+// Checkout
+document.getElementById('cartOrderForm').addEventListener('submit', function(e) {
   e.preventDefault();
-  const product = selectedProductInput.value || 'غير محدد';
-  const name = document.getElementById('oName').value.trim();
-  const phone = document.getElementById('oPhone').value.trim();
-  const gov = document.getElementById('oGov').value;
-  const addr = document.getElementById('oAddr').value.trim();
-  if (!name || !phone || !gov || !addr) {
-    alert('يرجى تعبئة جميع الحقول المطلوبة');
-    return;
-  }
-  // Save order to localStorage
+  const gov  = document.getElementById('cGov').value;
+  const phone= document.getElementById('cPhone').value.trim();
+  const addr = document.getElementById('cAddr').value.trim();
+  if (!gov || !phone || !addr) { alert('يرجى تعبئة جميع الحقول'); return; }
+
   const orders = JSON.parse(localStorage.getItem('icebath_orders') || '[]');
-  orders.push({ id: Date.now(), product, name, phone, gov, addr, date: new Date().toISOString(), status: 'جديد' });
+  orders.push({ id: Date.now(), items: {...cart}, total: getTotal(), phone, gov, addr, date: new Date().toISOString(), status: 'جديد' });
   localStorage.setItem('icebath_orders', JSON.stringify(orders));
-  orderFormWrap.style.display = 'none';
-  orderSuccess.style.display = 'block';
+
+  cart = {};
+  renderCart();
+  document.getElementById('cartFormSection').style.display = 'none';
+  document.getElementById('cartSuccessBox').style.display  = 'block';
+  setTimeout(() => {
+    closeCart();
+    setTimeout(() => {
+      document.getElementById('cartFormSection').style.display = 'block';
+      document.getElementById('cartSuccessBox').style.display  = 'none';
+    }, 400);
+  }, 2800);
 });
+
+renderCart();
 </script>
 
 </body>
