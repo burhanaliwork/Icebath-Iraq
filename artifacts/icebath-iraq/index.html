@@ -56,13 +56,13 @@
     display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
     padding:1rem 2rem;border-radius:100px;
     font-family:'Tajawal',sans-serif;font-weight:700;font-size:1rem;
-    transition:transform .65s cubic-bezier(.34,1.56,.64,1), box-shadow .55s cubic-bezier(.22,1,.36,1), background .45s ease, color .35s ease, opacity .35s ease;
+    transition:transform 1s cubic-bezier(.34,1.4,.64,1), box-shadow .9s cubic-bezier(.22,1,.36,1), background .6s ease, color .45s ease, opacity .45s ease;
     will-change:transform;
     white-space:nowrap;
     cursor:pointer;
     -webkit-tap-highlight-color:transparent;
   }
-  .btn:active{transform:scale(.93) !important;transition:transform .15s ease, box-shadow .15s ease;}
+  .btn:active{transform:scale(.93) !important;transition:transform .2s ease, box-shadow .2s ease;}
   .btn-primary{
     background:linear-gradient(135deg, var(--ice), var(--ice-deep));
     color:var(--white);
@@ -428,7 +428,7 @@
     padding:.55rem 1rem;border-radius:100px;
     border:1.5px solid var(--border);background:var(--white);
     cursor:pointer;font-family:'Tajawal',sans-serif;font-weight:700;font-size:.95rem;color:var(--navy);
-    transition:border-color .2s,color .2s;
+    transition:transform 1s cubic-bezier(.34,1.4,.64,1), box-shadow .9s cubic-bezier(.22,1,.36,1), border-color .45s ease, color .45s ease;
   }
   .cart-btn:hover{border-color:var(--ice);color:var(--ice-deep);transform:scale(1.1);box-shadow:0 8px 24px -8px rgba(28,134,208,.35);}
   .cart-badge{
@@ -612,7 +612,6 @@
       <div class="section-head center reveal" style="margin-bottom:3.5rem;">
         <span style="display:inline-block;background:var(--white);color:var(--ice-deep);font-size:.82rem;font-weight:700;padding:.4rem 1.1rem;border-radius:100px;margin-bottom:.9rem;box-shadow:0 2px 12px rgba(28,134,208,.12);">ليش الـ Ice Bath؟</span>
         <h2>فوائد الـ Ice Bath</h2>
-        <p>هذي الفوائد اللي صارت لأناس فعلًا جربوه</p>
       </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.4rem;">
 
