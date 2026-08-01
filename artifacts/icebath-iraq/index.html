@@ -56,39 +56,38 @@
     display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
     padding:1rem 2rem;border-radius:100px;
     font-family:'Tajawal',sans-serif;font-weight:700;font-size:1rem;
-    transition:transform .4s cubic-bezier(.22,1,.36,1), box-shadow .4s cubic-bezier(.22,1,.36,1), background .4s cubic-bezier(.22,1,.36,1), color .3s ease, opacity .3s ease;
+    transition:transform .65s cubic-bezier(.34,1.56,.64,1), box-shadow .55s cubic-bezier(.22,1,.36,1), background .45s ease, color .35s ease, opacity .35s ease;
     will-change:transform;
     white-space:nowrap;
     cursor:pointer;
     -webkit-tap-highlight-color:transparent;
   }
-  .btn:hover{opacity:.93;}
-  .btn:active{transform:scale(.94);opacity:1;}
+  .btn:active{transform:scale(.93) !important;transition:transform .15s ease, box-shadow .15s ease;}
   .btn-primary{
     background:linear-gradient(135deg, var(--ice), var(--ice-deep));
     color:var(--white);
     box-shadow:var(--shadow-ice);
   }
-  .btn-primary:hover{transform:translateY(-4px) scale(1.01);box-shadow:0 28px 56px -18px rgba(28,134,208,.65);opacity:1;}
+  .btn-primary:hover{transform:translateY(-5px) scale(1.025);box-shadow:0 32px 60px -18px rgba(28,134,208,.6);}
   .btn-ghost{
     background:var(--white);
     color:var(--navy);
     border:1.5px solid var(--border);
   }
-  .btn-ghost:hover{border-color:var(--ice);color:var(--ice-deep);transform:translateY(-3px);}
+  .btn-ghost:hover{border-color:var(--ice);color:var(--ice-deep);transform:translateY(-4px) scale(1.02);}
   .btn-light{
     background:rgba(255,255,255,.12);
     color:var(--white);
     border:1.5px solid rgba(255,255,255,.35);
     backdrop-filter:blur(6px);
   }
-  .btn-light:hover{background:rgba(255,255,255,.22);transform:translateY(-3px);}
+  .btn-light:hover{background:rgba(255,255,255,.22);transform:translateY(-4px);}
   .btn-white{
     background:var(--white);
     color:var(--navy-2);
     box-shadow:0 20px 40px -18px rgba(0,0,0,.35);
   }
-  .btn-white:hover{transform:translateY(-3px);}
+  .btn-white:hover{transform:translateY(-4px) scale(1.02);}
 
   /* ---------- header ---------- */
   header{
@@ -431,7 +430,7 @@
     cursor:pointer;font-family:'Tajawal',sans-serif;font-weight:700;font-size:.95rem;color:var(--navy);
     transition:border-color .2s,color .2s;
   }
-  .cart-btn:hover{border-color:var(--ice);color:var(--ice-deep);transform:scale(1.07);box-shadow:0 8px 24px -8px rgba(28,134,208,.35);}
+  .cart-btn:hover{border-color:var(--ice);color:var(--ice-deep);transform:scale(1.1);box-shadow:0 8px 24px -8px rgba(28,134,208,.35);}
   .cart-badge{
     background:var(--ice-deep);color:#fff;
     border-radius:100px;font-size:.7rem;font-weight:800;
@@ -607,57 +606,53 @@
     </div>
   </section>
 
-  <!-- ===== FAQ ===== -->
-  <section id="faq" style="padding:90px 0;">
+  <!-- ===== BENEFITS ===== -->
+  <section id="benefits" style="padding:90px 0;background:var(--frost);">
     <div style="max-width:1140px;margin:0 auto;padding:0 1.5rem;">
-      <div class="section-head center reveal" style="margin-bottom:3rem;">
-        <span style="display:inline-block;background:var(--frost);color:var(--ice-deep);font-size:.82rem;font-weight:700;padding:.4rem 1.1rem;border-radius:100px;margin-bottom:.9rem;">أسئلة شائعة</span>
-        <h2>أي سؤال عندك؟</h2>
-        <p>أجوبة على أكثر الأسئلة اللي تجيلنا</p>
+      <div class="section-head center reveal" style="margin-bottom:3.5rem;">
+        <span style="display:inline-block;background:var(--white);color:var(--ice-deep);font-size:.82rem;font-weight:700;padding:.4rem 1.1rem;border-radius:100px;margin-bottom:.9rem;box-shadow:0 2px 12px rgba(28,134,208,.12);">ليش الـ Ice Bath؟</span>
+        <h2>شنو راح يصيرلك؟</h2>
+        <p>هذي الفوائد اللي صارت لأناس فعلًا جربوه</p>
       </div>
-      <ul class="faq-list" role="list">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.4rem;">
 
-        <li class="faq-item">
-          <button class="faq-btn" aria-expanded="false">
-            <span>شنو مقاسات الحوض؟</span>
-            <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="faq-body">الحوض الأساسي مقاسه 70×70 سم وارتفاعه 70 سم — مناسب للاستخدام اليومي ويوفر مساحة مريحة. الحوض الاحترافي XL أكبر: 80×80 سم وارتفاعه 80 سم مع عزل حراري أقوى.</div>
-        </li>
+        <div class="reveal" style="background:var(--white);border-radius:20px;padding:1.8rem;box-shadow:0 8px 30px -12px rgba(14,42,82,.12);border:1px solid var(--border);">
+          <div style="font-size:2.2rem;margin-bottom:1rem;">💪</div>
+          <h3 style="font-family:'Tajawal',sans-serif;font-size:1.1rem;font-weight:800;color:var(--navy);margin-bottom:.6rem;">عضلاتك تتعافى أسرع</h3>
+          <p style="color:var(--slate);font-size:.94rem;line-height:1.7;">بعد التمرين أو يوم تعبان، البرد يخفف الالتهاب ويسرّع الشفاء — ترجع بقوة من يوم لثاني.</p>
+        </div>
 
-        <li class="faq-item">
-          <button class="faq-btn" aria-expanded="false">
-            <span>كم تحتاج جلد الحوض بالثلج؟</span>
-            <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="faq-body">تحتاج تقريبًا 8–12 كيلو ثلج عشان تنزل درجة الماء بين 10–15°م. تقدر تستخدم ماء بارد من البراد بدون ثلج للمبتدئين.</div>
-        </li>
+        <div class="reveal" style="background:var(--white);border-radius:20px;padding:1.8rem;box-shadow:0 8px 30px -12px rgba(14,42,82,.12);border:1px solid var(--border);">
+          <div style="font-size:2.2rem;margin-bottom:1rem;">🧠</div>
+          <h3 style="font-family:'Tajawal',sans-serif;font-size:1.1rem;font-weight:800;color:var(--navy);margin-bottom:.6rem;">ذهنك يصفى ومزاجك يتحسن</h3>
+          <p style="color:var(--slate);font-size:.94rem;line-height:1.7;">الجسم يطلق دوبامين وأدرينالين — تحس بتركيز وطاقة تدوم ساعات بعد الجلسة.</p>
+        </div>
 
-        <li class="faq-item">
-          <button class="faq-btn" aria-expanded="false">
-            <span>كم مدة الجلسة الواحدة؟</span>
-            <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="faq-body">للمبتدئين من 1–3 دقائق كافية. بعد ما تتعود تقدر توصل 5–10 دقائق. المهم ما تتجاوز 15 دقيقة بجلسة وحدة.</div>
-        </li>
+        <div class="reveal" style="background:var(--white);border-radius:20px;padding:1.8rem;box-shadow:0 8px 30px -12px rgba(14,42,82,.12);border:1px solid var(--border);">
+          <div style="font-size:2.2rem;margin-bottom:1rem;">😴</div>
+          <h3 style="font-family:'Tajawal',sans-serif;font-size:1.1rem;font-weight:800;color:var(--navy);margin-bottom:.6rem;">نومك يتحسن بشكل واضح</h3>
+          <p style="color:var(--slate);font-size:.94rem;line-height:1.7;">جلسة بالليل تنظم حرارة جسمك وتخليك تغفو أسرع وتصحى منيح أكثر من قبل.</p>
+        </div>
 
-        <li class="faq-item">
-          <button class="faq-btn" aria-expanded="false">
-            <span>متى يوصل الحوض؟</span>
-            <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="faq-body">التوصيل يوصل خلال 2–5 أيام عمل بعد تأكيد الطلب. راح تجيك رسالة واتساب لتأكيد الطلب وموعد التوصيل.</div>
-        </li>
+        <div class="reveal" style="background:var(--white);border-radius:20px;padding:1.8rem;box-shadow:0 8px 30px -12px rgba(14,42,82,.12);border:1px solid var(--border);">
+          <div style="font-size:2.2rem;margin-bottom:1rem;">🔥</div>
+          <h3 style="font-family:'Tajawal',sans-serif;font-size:1.1rem;font-weight:800;color:var(--navy);margin-bottom:.6rem;">حرق أكثر وطاقة أكثر</h3>
+          <p style="color:var(--slate);font-size:.94rem;line-height:1.7;">جسمك يشتغل يسخّن نفسه — هاي العملية تحرق سعرات وتنشط الأيض بشكل طبيعي.</p>
+        </div>
 
-        <li class="faq-item">
-          <button class="faq-btn" aria-expanded="false">
-            <span>شلون أدفع؟</span>
-            <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="faq-body">الدفع عند الاستلام فقط — ما تدفع شي قبل ما يوصل الحوض لبيتك.</div>
-        </li>
+        <div class="reveal" style="background:var(--white);border-radius:20px;padding:1.8rem;box-shadow:0 8px 30px -12px rgba(14,42,82,.12);border:1px solid var(--border);">
+          <div style="font-size:2.2rem;margin-bottom:1rem;">🛡️</div>
+          <h3 style="font-family:'Tajawal',sans-serif;font-size:1.1rem;font-weight:800;color:var(--navy);margin-bottom:.6rem;">مناعتك تصير أقوى</h3>
+          <p style="color:var(--slate);font-size:.94rem;line-height:1.7;">الجسم يتكيف مع البرد ويقوّي دفاعاته — تحس أنك أقل مريض وأكثر تحمل طول السنة.</p>
+        </div>
 
-      </ul>
+        <div class="reveal" style="background:var(--white);border-radius:20px;padding:1.8rem;box-shadow:0 8px 30px -12px rgba(14,42,82,.12);border:1px solid var(--border);">
+          <div style="font-size:2.2rem;margin-bottom:1rem;">🧘</div>
+          <h3 style="font-family:'Tajawal',sans-serif;font-size:1.1rem;font-weight:800;color:var(--navy);margin-bottom:.6rem;">سيطرة على الضغط والتوتر</h3>
+          <p style="color:var(--slate);font-size:.94rem;line-height:1.7;">كل مرة تدخل الماء البارد وتصمد، تدرب نفسك على هدوء الأعصاب — بالحياة اليومية كلها.</p>
+        </div>
+
+      </div>
     </div>
   </section>
 
