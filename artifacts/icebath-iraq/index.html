@@ -422,6 +422,13 @@
   .product-chip.selected{border-color:var(--ice);background:var(--frost);color:var(--ice-deep);}
 
 
+  @keyframes cartPulse{
+    0%{transform:scale(1);}
+    40%{transform:scale(.9);}
+    70%{transform:scale(1.08);}
+    100%{transform:scale(1);}
+  }
+  .cart-pulse{animation:cartPulse .6s cubic-bezier(.34,1.56,.64,1);}
   /* ---------- Cart button ---------- */
   .cart-btn{
     display:inline-flex;align-items:center;gap:.35rem;
@@ -442,15 +449,16 @@
   .cart-overlay{
     position:fixed;inset:0;z-index:600;
     background:rgba(14,42,82,.45);backdrop-filter:blur(4px);
-    display:none;
+    opacity:0;pointer-events:none;
+    transition:opacity .55s cubic-bezier(.22,1,.36,1);
   }
-  .cart-overlay.active{display:block;}
+  .cart-overlay.active{opacity:1;pointer-events:all;}
   .cart-drawer{
     position:fixed;top:0;right:0;bottom:0;
     width:min(440px,100%);
     background:var(--white);z-index:601;
     transform:translateX(100%);
-    transition:transform .4s var(--ease);
+    transition:transform .75s cubic-bezier(.34,1.15,.64,1);
     display:flex;flex-direction:column;
     box-shadow:-8px 0 40px rgba(14,42,82,.15);
   }
@@ -878,14 +886,20 @@ function changeQty(name, delta) {
 }
 
 function openCart() {
-  document.getElementById('cartOverlay').classList.add('active');
+  const ov = document.getElementById('cartOverlay');
+  ov.style.display = 'block';
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => { ov.classList.add('active'); });
+  });
   document.body.style.overflow = 'hidden';
   renderCart();
 }
 
 function closeCart() {
-  document.getElementById('cartOverlay').classList.remove('active');
+  const ov = document.getElementById('cartOverlay');
+  ov.classList.remove('active');
   document.body.style.overflow = '';
+  ov.addEventListener('transitionend', () => { ov.style.display = ''; }, { once: true });
 }
 
 document.getElementById('cartCloseBtn').addEventListener('click', closeCart);
@@ -897,6 +911,10 @@ document.querySelectorAll('.add-to-cart').forEach(btn => {
   btn.addEventListener('click', () => {
     const p = btn.dataset.product;
     cart[p] = (cart[p] || 0) + 1;
+    btn.classList.remove('cart-pulse');
+    void btn.offsetWidth;
+    btn.classList.add('cart-pulse');
+    btn.addEventListener('animationend', () => btn.classList.remove('cart-pulse'), { once: true });
     openCart();
     renderCart();
   });
