@@ -804,6 +804,7 @@
       <div id="cartFormSection">
         <form id="cartOrderForm" novalidate>
           <div class="checkout-fields">
+            <input type="text" id="cName" placeholder="الاسم *" required>
             <select id="cGov" required>
               <option value="">اختار محافظتك *</option>
               <option>بغداد</option><option>البصرة</option><option>الموصل</option>
@@ -816,7 +817,7 @@
             <input type="tel" id="cPhone" placeholder="رقم الهاتف *" required>
             <textarea id="cAddr" placeholder="العنوان التفصيلي — الحي، الشارع، رقم البيت *" required></textarea>
           </div>
-          <button type="submit" class="btn btn-primary cart-submit-btn">إرسال الطلب ❄️</button>
+          <button type="submit" class="btn btn-primary cart-submit-btn">إتمام الطلب</button>
         </form>
       </div>
       <div class="cart-success-box" id="cartSuccessBox">
@@ -922,13 +923,14 @@ document.querySelectorAll('.add-to-cart').forEach(btn => {
 // Checkout
 document.getElementById('cartOrderForm').addEventListener('submit', function(e) {
   e.preventDefault();
+  const name = document.getElementById('cName').value.trim();
   const gov  = document.getElementById('cGov').value;
   const phone= document.getElementById('cPhone').value.trim();
   const addr = document.getElementById('cAddr').value.trim();
-  if (!gov || !phone || !addr) { alert('يرجى تعبئة جميع الحقول'); return; }
+  if (!name || !gov || !phone || !addr) { alert('يرجى تعبئة جميع الحقول'); return; }
 
   const orders = JSON.parse(localStorage.getItem('icebath_orders') || '[]');
-  orders.push({ id: Date.now(), items: {...cart}, total: getTotal(), phone, gov, addr, date: new Date().toISOString(), status: 'جديد' });
+  orders.push({ id: Date.now(), items: {...cart}, total: getTotal(), name, phone, gov, addr, date: new Date().toISOString(), status: 'جديد' });
   localStorage.setItem('icebath_orders', JSON.stringify(orders));
 
   cart = {};
