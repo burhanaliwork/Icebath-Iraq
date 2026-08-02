@@ -1,6 +1,7 @@
 kind = "web"
 previewPath = "/"
 title = "ICEBATH.IRAQ"
+description = "A full-stack web application for ICEBATH.IRAQ — a React + Vite frontend backed by an Express API server and PostgreSQL database."
 version = "1.0.0"
 id = "artifacts/icebath-iraq"
 router = "path"
