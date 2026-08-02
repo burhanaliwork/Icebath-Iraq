@@ -89,9 +89,27 @@
   }
   .btn-white:hover{transform:translateY(-4px) scale(1.02);}
 
+  /* ---------- announcement bar ---------- */
+  #announcementBar{
+    position:fixed;inset-inline:0;top:0;z-index:102;
+    background:linear-gradient(90deg,#0a2a50,#1c86d0,#0a2a50);
+    color:#fff;font-family:'Tajawal',sans-serif;font-weight:700;font-size:.82rem;
+    height:34px;display:flex;align-items:center;justify-content:center;overflow:hidden;
+    letter-spacing:.5px;
+  }
+  .ticker-wrap{width:100%;overflow:hidden;display:flex;justify-content:center;}
+  .ticker-inner{
+    white-space:nowrap;display:inline-block;
+    animation:tickerBounce 5s ease-in-out infinite alternate;
+  }
+  @keyframes tickerBounce{
+    0%  {transform:translateX(-80px);}
+    100%{transform:translateX(80px);}
+  }
+
   /* ---------- header ---------- */
   header{
-    position:fixed;inset-inline:0;top:0;z-index:100;
+    position:fixed;inset-inline:0;top:34px;z-index:100;
     padding:18px 0;
     transition:background .4s var(--ease), box-shadow .4s var(--ease), padding .4s var(--ease);
   }
@@ -105,7 +123,10 @@
   .brand{display:flex;align-items:center;gap:.6rem;}
   .brand img{width:42px;height:42px;object-fit:contain;transition:transform .4s var(--ease);}
   .brand:hover img{transform:rotate(-8deg) scale(1.05);}
-  .brand span{font-family:'Tajawal',sans-serif;font-weight:900;font-size:1.25rem;color:#3bbfff;letter-spacing:.2px;text-shadow:0 0 12px rgba(59,191,255,.9),0 0 30px rgba(59,191,255,.55),0 0 55px rgba(28,134,208,.35);transition:text-shadow .4s ease;}
+  .brand span,.brand-inline{font-family:'Tajawal',sans-serif;font-weight:900;font-size:2.2rem;color:#3bbfff;letter-spacing:.5px;line-height:1;text-shadow:0 0 14px rgba(59,191,255,.95),0 0 35px rgba(59,191,255,.6),0 0 60px rgba(28,134,208,.4);transition:text-shadow .4s ease;}
+  .brand-inline{display:flex;align-items:center;text-decoration:none;filter:drop-shadow(0 0 4px rgba(0,0,0,.3));}
+  .brand-inline:hover{text-shadow:0 0 20px rgba(59,191,255,1),0 0 50px rgba(59,191,255,.75),0 0 80px rgba(28,134,208,.55);}
+  @media(max-width:880px){.brand span,.brand-inline{font-size:1.5rem;}}
   nav ul{display:flex;gap:2.2rem;}
   nav a{
     font-weight:600;color:var(--slate);position:relative;padding-bottom:4px;
@@ -118,8 +139,8 @@
   nav a:hover{color:var(--navy);}
   nav a:hover::after{width:100%;}
   .nav-cta{display:flex;align-items:center;gap:.8rem;}
-  .menu-toggle{display:none;width:26px;height:20px;position:relative;flex-direction:column;justify-content:space-between;}
-  .menu-toggle span{display:block;height:2.5px;width:100%;background:var(--navy);border-radius:2px;transition:transform .35s var(--ease), opacity .35s var(--ease);}
+  .menu-toggle{display:none;width:26px;height:20px;position:relative;flex-direction:column;justify-content:space-between;filter:drop-shadow(0 0 3px rgba(0,0,0,.45));}
+  .menu-toggle span{display:block;height:2.5px;width:100%;background:#fff;border-radius:2px;transition:transform .35s var(--ease), opacity .35s var(--ease);}
 
   @media (max-width:880px){
     nav{position:fixed;inset:0;top:0;background:var(--white);display:flex;align-items:center;justify-content:center;
@@ -136,7 +157,7 @@
   /* ---------- hero ---------- */
   .hero{
     position:relative;
-    padding:170px 0 110px;
+    padding:208px 0 110px;
     background:
       radial-gradient(1100px 600px at 85% -10%, var(--frost) 0%, transparent 60%),
       radial-gradient(900px 500px at -10% 30%, var(--frost-2) 0%, transparent 55%),
@@ -376,9 +397,10 @@
   }
   .product-price span{font-size:.85rem;font-weight:600;color:var(--slate-light);}
 
-  /* ---------- Instagram footer icon ---------- */
+  /* ---------- footer social icons ---------- */
   .foot-insta{display:inline-flex;align-items:center;color:var(--slate);transition:color .3s;}
   .foot-insta:hover{color:var(--ice-deep);}
+  .foot-social-icons{display:flex;flex-direction:column;gap:.55rem;align-items:center;}
 
   /* ---------- Order modal ---------- */
   .order-overlay{
@@ -437,9 +459,16 @@
   .cart-btn{
     display:inline-flex;align-items:center;gap:.35rem;
     padding:.55rem 1rem;border-radius:100px;
-    border:1.5px solid var(--border);background:var(--white);
-    cursor:pointer;font-family:'Tajawal',sans-serif;font-weight:700;font-size:.95rem;color:var(--navy);
+    border:1.5px solid rgba(255,255,255,.45);
+    background:rgba(255,255,255,.15);
+    backdrop-filter:blur(6px);
+    cursor:pointer;font-family:'Tajawal',sans-serif;font-weight:700;font-size:.95rem;color:#fff;
+    filter:drop-shadow(0 0 4px rgba(0,0,0,.35));
     transition:transform 1s cubic-bezier(.34,1.4,.64,1), box-shadow .9s cubic-bezier(.22,1,.36,1), border-color .45s ease, color .45s ease;
+  }
+  header.scrolled .cart-btn{
+    background:rgba(14,42,82,.1) !important;
+    border-color:rgba(14,42,82,.18) !important;
   }
   .cart-btn:hover{border-color:var(--ice);color:var(--ice-deep);transform:scale(1.1);box-shadow:0 8px 24px -8px rgba(28,134,208,.35);}
   .cart-badge{
@@ -629,13 +658,7 @@
   header:not(.scrolled) nav a{ color:rgba(255,255,255,.85) !important; }
   header:not(.scrolled) .brand span{ color:#3bbfff !important; text-shadow:0 0 14px rgba(59,191,255,.95),0 0 35px rgba(59,191,255,.6) !important; }
   header:not(.scrolled) nav a:hover{ color:#fff !important; }
-  header:not(.scrolled) .cart-btn{
-    background:rgba(255,255,255,.15) !important;
-    border-color:rgba(255,255,255,.4) !important;
-    color:rgba(255,255,255,.95) !important;
-    backdrop-filter:blur(6px);
-  }
-  header:not(.scrolled) .menu-toggle span{ background:#fff !important; }
+  /* cart-btn and menu-toggle are white by default — no override needed for non-scrolled state */
 
   /* ── Products section: subtle ice tint ── */
   #products{
@@ -752,12 +775,14 @@
 </head>
 <body>
 
+<div id="announcementBar">
+  <div class="ticker-wrap">
+    <span class="ticker-inner">🚚&nbsp; توصيل مجاني لجميع انحاء العراق &nbsp;&nbsp;&nbsp; ❄️ &nbsp;&nbsp;&nbsp; توصيل مجاني لجميع انحاء العراق &nbsp;🚚</span>
+  </div>
+</div>
+
 <header id="siteHeader">
   <div class="container row">
-    <a href="#top" class="brand">
-      
-      <span>ICEBATH.IRAQ</span>
-    </a>
     <nav id="siteNav">
       <ul>
         <li><a href="#top" class="nav-link">الرئيسية</a></li>
@@ -766,6 +791,7 @@
       </ul>
     </nav>
     <div class="nav-cta">
+      <a href="#top" class="brand-inline">ICEBATH.IRAQ</a>
       <button class="cart-btn" id="cartOpenBtn" onclick="openCart()" aria-label="السلة">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
         <span class="cart-badge hidden" id="cartBadge">0</span>
@@ -915,10 +941,14 @@
     </div>
     <div class="foot-links">
       <a href="#products">منتجاتنا</a>
-      <a href="https://wa.me/9647869349728" target="_blank" rel="noopener" class="foot-insta" aria-label="واتساب">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-        <span style="font-size:.85rem;font-weight:600;">+964 786 934 9728</span>
-      </a>
+      <div class="foot-social-icons">
+        <a href="https://instagram.com/icebath.iraq" target="_blank" rel="noopener" class="foot-insta" aria-label="انستغرام">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <a href="https://wa.me/9647869349728" target="_blank" rel="noopener" class="foot-insta" aria-label="واتساب">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+        </a>
+      </div>
     </div>
   </div>
   <p class="foot-bottom">© 2026 ICEBATH.IRAQ — جميع الحقوق محفوظة</p>
@@ -1009,7 +1039,7 @@
       const target = document.querySelector(targetId);
       if (target) {
         e.preventDefault();
-        const y = target.getBoundingClientRect().top + window.scrollY - 80;
+        const y = target.getBoundingClientRect().top + window.scrollY - 114;
         window.scrollTo({ top: y, behavior: reduceMotion ? 'auto' : 'smooth' });
       }
     });
