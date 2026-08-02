@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة الأدمن — ICEBATH.IRAQ</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800;900&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'IBM Plex Sans Arabic',sans-serif;background:#030f1c;color:#c8e8ff;min-height:100vh;direction:rtl;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;}
+  input,select,textarea{font-family:inherit;}
+
+  /* ── Login ── */
+  .login-wrap{
+    display:flex;align-items:center;justify-content:center;min-height:100vh;
+    background:linear-gradient(155deg,#030f1c 0%,#071e38 40%,#0b3060 100%);
+  }
+  .login-box{
+    background:rgba(255,255,255,.06);border:1px solid rgba(59,191,255,.25);
+    border-radius:24px;padding:2.5rem 2rem;width:min(400px,94vw);
+    backdrop-filter:blur(12px);
+    box-shadow:0 30px 60px rgba(0,0,0,.5);
+  }
+  .login-box h1{font-family:'Tajawal',sans-serif;font-size:1.8rem;font-weight:900;
+    color:#3bbfff;text-shadow:0 0 20px rgba(59,191,255,.6);margin-bottom:.4rem;text-align:center;}
+  .login-box p{font-size:.9rem;color:rgba(160,220,255,.65);text-align:center;margin-bottom:2rem;}
+  .login-box input{
+    width:100%;padding:.85rem 1rem;background:rgba(255,255,255,.07);
+    border:1.5px solid rgba(59,191,255,.3);border-radius:12px;
+    color:#fff;font-size:1rem;outline:none;margin-bottom:1rem;
+    transition:border-color .25s;direction:ltr;text-align:center;letter-spacing:4px;
+  }
+  .login-box input:focus{border-color:#3bbfff;}
+  .login-box input::placeholder{letter-spacing:0;direction:rtl;text-align:center;color:rgba(160,220,255,.4);}
+  .btn-login{
+    width:100%;padding:.9rem;border:none;border-radius:12px;
+    background:linear-gradient(135deg,#1c86d0,#3bbfff);
+    color:#fff;font-family:'Tajawal',sans-serif;font-weight:800;font-size:1.05rem;
+    transition:transform .2s,box-shadow .2s;
+  }
+  .btn-login:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(59,191,255,.4);}
+  .login-err{color:#ff6b6b;font-size:.88rem;text-align:center;margin-top:.6rem;display:none;}
+
+  /* ── Dashboard ── */
+  .dashboard{display:none;min-height:100vh;}
+  .topbar{
+    background:rgba(4,15,30,.9);backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(59,191,255,.2);
+    padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;
+    position:sticky;top:0;z-index:50;
+  }
+  .topbar h1{font-family:'Tajawal',sans-serif;font-size:1.3rem;font-weight:900;
+    color:#3bbfff;text-shadow:0 0 14px rgba(59,191,255,.6);}
+  .topbar-right{display:flex;align-items:center;gap:1rem;}
+  .topbar-right a{color:rgba(160,220,255,.7);font-size:.88rem;font-weight:600;
+    padding:.45rem .9rem;border:1px solid rgba(59,191,255,.25);border-radius:8px;
+    transition:border-color .2s,color .2s;}
+  .topbar-right a:hover{border-color:#3bbfff;color:#3bbfff;}
+  .logout-btn{background:none;border:1px solid rgba(255,100,100,.35);
+    color:rgba(255,160,160,.8);padding:.45rem .9rem;border-radius:8px;font-size:.88rem;font-weight:600;
+    transition:border-color .2s,color .2s;}
+  .logout-btn:hover{border-color:#ff6b6b;color:#ff6b6b;}
+
+  .main{max-width:1100px;margin:0 auto;padding:2rem 1.5rem;}
+  .section-title{font-family:'Tajawal',sans-serif;font-size:1.4rem;font-weight:900;color:#7fd6ff;margin-bottom:1.2rem;}
+
+  /* ── Add product form ── */
+  .add-form{
+    background:rgba(255,255,255,.05);border:1px solid rgba(59,191,255,.2);
+    border-radius:20px;padding:2rem;margin-bottom:2.5rem;
+  }
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+  @media(max-width:600px){.form-grid{grid-template-columns:1fr;}}
+  .field{display:flex;flex-direction:column;gap:.4rem;}
+  .field label{font-weight:700;font-size:.88rem;color:rgba(160,220,255,.8);}
+  .field input,.field textarea,.field select{
+    padding:.75rem 1rem;background:rgba(255,255,255,.07);
+    border:1.5px solid rgba(59,191,255,.25);border-radius:10px;
+    color:#fff;font-size:.95rem;outline:none;direction:rtl;
+    transition:border-color .25s;
+  }
+  .field input:focus,.field textarea:focus,.field select:focus{border-color:#3bbfff;}
+  .field input::placeholder,.field textarea::placeholder{color:rgba(160,220,255,.35);}
+  .field textarea{resize:vertical;min-height:80px;}
+  .field-full{grid-column:1/-1;}
+
+  /* Image upload */
+  .img-upload-area{
+    border:2px dashed rgba(59,191,255,.35);border-radius:14px;
+    padding:1.5rem;text-align:center;cursor:pointer;
+    transition:border-color .25s,background .25s;position:relative;
+    min-height:120px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.5rem;
+  }
+  .img-upload-area:hover{border-color:#3bbfff;background:rgba(59,191,255,.06);}
+  .img-upload-area input[type=file]{
+    position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;
+  }
+  .img-upload-area .upload-icon{font-size:2rem;}
+  .img-upload-area p{color:rgba(160,220,255,.6);font-size:.9rem;}
+  .img-preview{max-height:140px;border-radius:10px;display:none;margin-top:.5rem;object-fit:cover;max-width:100%;}
+
+  .form-actions{margin-top:1.4rem;display:flex;gap:1rem;}
+  .btn-add{
+    padding:.85rem 2rem;border:none;border-radius:12px;
+    background:linear-gradient(135deg,#1c86d0,#3bbfff);
+    color:#fff;font-family:'Tajawal',sans-serif;font-weight:800;font-size:1rem;
+    transition:transform .2s,box-shadow .2s;
+  }
+  .btn-add:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(59,191,255,.4);}
+  .btn-reset{
+    padding:.85rem 1.4rem;border:1.5px solid rgba(59,191,255,.3);border-radius:12px;
+    background:none;color:rgba(160,220,255,.7);font-family:'Tajawal',sans-serif;font-weight:700;font-size:1rem;
+    transition:border-color .2s,color .2s;
+  }
+  .btn-reset:hover{border-color:#3bbfff;color:#3bbfff;}
+
+  /* ── Products list ── */
+  .products-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem;}
+  .prod-item{
+    background:rgba(255,255,255,.05);border:1px solid rgba(59,191,255,.18);
+    border-radius:18px;overflow:hidden;
+    transition:transform .3s,border-color .3s;
+  }
+  .prod-item:hover{transform:translateY(-4px);border-color:rgba(59,191,255,.45);}
+  .prod-img{width:100%;height:200px;object-fit:cover;display:block;background:#071e38;}
+  .prod-img-placeholder{width:100%;height:200px;display:flex;align-items:center;justify-content:center;font-size:3.5rem;background:#071e38;color:rgba(127,214,255,.3);}
+  .prod-body{padding:1.2rem 1.2rem 1.4rem;}
+  .prod-name{font-family:'Tajawal',sans-serif;font-size:1.1rem;font-weight:800;color:#e8f6ff;margin-bottom:.3rem;}
+  .prod-desc{font-size:.88rem;color:rgba(160,220,255,.65);margin-bottom:.6rem;line-height:1.6;}
+  .prod-price{font-family:'Tajawal',sans-serif;font-weight:900;font-size:1.2rem;color:#3bbfff;margin-bottom:.9rem;}
+  .btn-delete{
+    width:100%;padding:.6rem;border:1px solid rgba(255,100,100,.35);border-radius:10px;
+    background:none;color:rgba(255,160,160,.8);font-family:'Tajawal',sans-serif;font-weight:700;font-size:.9rem;
+    transition:background .2s,color .2s,border-color .2s;
+  }
+  .btn-delete:hover{background:rgba(255,60,60,.15);color:#ff6b6b;border-color:#ff6b6b;}
+
+  .empty-state{text-align:center;padding:3rem 1rem;color:rgba(160,220,255,.4);}
+  .empty-state .ico{font-size:3rem;margin-bottom:.8rem;}
+
+  /* Toast */
+  .toast{
+    position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);
+    background:rgba(10,50,90,.95);border:1px solid rgba(59,191,255,.4);
+    border-radius:12px;padding:.8rem 1.5rem;color:#7fd6ff;font-weight:700;font-size:.95rem;
+    transition:transform .4s cubic-bezier(.34,1.56,.64,1);z-index:999;white-space:nowrap;
+    backdrop-filter:blur(10px);
+  }
+  .toast.show{transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN SCREEN ── -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <h1>❄ ICEBATH.IRAQ</h1>
+    <p>لوحة تحكم الأدمن — أدخل كلمة المرور</p>
+    <input type="password" id="pwdInput" placeholder="كلمة المرور" autocomplete="current-password">
+    <button class="btn-login" id="loginBtn">دخول</button>
+    <p class="login-err" id="loginErr">❌ كلمة المرور غلط</p>
+  </div>
+</div>
+
+<!-- ── DASHBOARD ── -->
+<div class="dashboard" id="dashboard">
+  <div class="topbar">
+    <h1>❄ لوحة التحكم — ICEBATH.IRAQ</h1>
+    <div class="topbar-right">
+      <a href="/" target="_blank">← الموقع</a>
+      <button class="logout-btn" id="logoutBtn">تسجيل خروج</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <!-- Add Product Form -->
+    <div class="add-form">
+      <p class="section-title">➕ أضف منتج جديد</p>
+      <div class="form-grid">
+        <div class="field">
+          <label>اسم المنتج *</label>
+          <input type="text" id="pName" placeholder="مثال: الحوض الأساسي" required>
+        </div>
+        <div class="field">
+          <label>السعر (دينار عراقي) *</label>
+          <input type="number" id="pPrice" placeholder="مثال: 85000" min="0" required>
+        </div>
+        <div class="field field-full">
+          <label>الوصف</label>
+          <textarea id="pDesc" placeholder="وصف المنتج..."></textarea>
+        </div>
+        <div class="field field-full">
+          <label>صورة المنتج (من التطبيق)</label>
+          <div class="img-upload-area" id="uploadArea">
+            <input type="file" id="imgInput" accept="image/*">
+            <div class="upload-icon">📸</div>
+            <p>اضغط لاختيار صورة من مكتبة الصور</p>
+            <img id="imgPreview" class="img-preview" alt="معاينة">
+          </div>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-add" id="addBtn">حفظ المنتج ✅</button>
+        <button class="btn-reset" id="resetBtn">إلغاء</button>
+      </div>
+    </div>
+
+    <!-- Products List -->
+    <p class="section-title">📦 المنتجات الحالية</p>
+    <div class="products-list" id="productsList"></div>
+    <div class="empty-state" id="emptyState">
+      <div class="ico">❄️</div>
+      <p>لا يوجد منتجات بعد — أضف أول منتج!</p>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Config ──────────────────────────────────────────
+const ADMIN_PASSWORD = 'icebath2024';
+const STORAGE_KEY = 'icebath_products';
+
+// ── Auth ─────────────────────────────────────────────
+function checkAuth() {
+  return sessionStorage.getItem('admin_auth') === '1';
+}
+function showDashboard() {
+  document.getElementById('loginWrap').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  renderProducts();
+}
+
+if (checkAuth()) showDashboard();
+
+document.getElementById('loginBtn').addEventListener('click', doLogin);
+document.getElementById('pwdInput').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+function doLogin() {
+  const val = document.getElementById('pwdInput').value;
+  if (val === ADMIN_PASSWORD) {
+    sessionStorage.setItem('admin_auth', '1');
+    document.getElementById('loginErr').style.display = 'none';
+    showDashboard();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+    document.getElementById('pwdInput').value = '';
+  }
+}
+
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  sessionStorage.removeItem('admin_auth');
+  location.reload();
+});
+
+// ── Image upload ─────────────────────────────────────
+let selectedImage = null;
+
+document.getElementById('imgInput').addEventListener('change', function() {
+  const file = this.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    selectedImage = e.target.result;
+    const preview = document.getElementById('imgPreview');
+    preview.src = selectedImage;
+    preview.style.display = 'block';
+    document.getElementById('uploadArea').querySelector('p').textContent = file.name;
+  };
+  reader.readAsDataURL(file);
+});
+
+// ── Products CRUD ─────────────────────────────────────
+function getProducts() {
+  return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+}
+function saveProducts(products) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+  // Notify other tabs
+  window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }));
+}
+
+function renderProducts() {
+  const products = getProducts();
+  const list = document.getElementById('productsList');
+  const empty = document.getElementById('emptyState');
+
+  if (products.length === 0) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  list.innerHTML = products.map(p => `
+    <div class="prod-item" data-id="${p.id}">
+      ${p.image
+        ? `<img src="${p.image}" class="prod-img" alt="${p.name}" loading="lazy">`
+        : `<div class="prod-img-placeholder">❄</div>`}
+      <div class="prod-body">
+        <div class="prod-name">${p.name}</div>
+        ${p.description ? `<div class="prod-desc">${p.description}</div>` : ''}
+        <div class="prod-price">${Number(p.price).toLocaleString()} د.ع</div>
+        <button class="btn-delete" onclick="deleteProduct('${p.id}')">🗑 حذف المنتج</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+document.getElementById('addBtn').addEventListener('click', () => {
+  const name  = document.getElementById('pName').value.trim();
+  const price = document.getElementById('pPrice').value.trim();
+  const desc  = document.getElementById('pDesc').value.trim();
+
+  if (!name || !price) { showToast('⚠️ اسم المنتج والسعر مطلوبان'); return; }
+
+  const products = getProducts();
+  products.push({
+    id: Date.now().toString(),
+    name,
+    price: Number(price),
+    description: desc,
+    image: selectedImage || null,
+    createdAt: new Date().toISOString()
+  });
+  saveProducts(products);
+  renderProducts();
+  resetForm();
+  showToast('✅ تم حفظ المنتج بنجاح');
+});
+
+document.getElementById('resetBtn').addEventListener('click', resetForm);
+
+function resetForm() {
+  document.getElementById('pName').value = '';
+  document.getElementById('pPrice').value = '';
+  document.getElementById('pDesc').value = '';
+  document.getElementById('imgPreview').style.display = 'none';
+  document.getElementById('imgPreview').src = '';
+  document.getElementById('uploadArea').querySelector('p').textContent = 'اضغط لاختيار صورة من مكتبة الصور';
+  document.getElementById('imgInput').value = '';
+  selectedImage = null;
+}
+
+function deleteProduct(id) {
+  if (!confirm('تأكد: تريد تحذف هذا المنتج؟')) return;
+  const products = getProducts().filter(p => p.id !== id);
+  saveProducts(products);
+  renderProducts();
+  showToast('🗑 تم حذف المنتج');
+}
+
+// ── Toast ─────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+</script>
+</body>
+</html>
