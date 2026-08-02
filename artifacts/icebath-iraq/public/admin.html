@@ -13,64 +13,57 @@
   input,select,textarea{font-family:inherit;}
 
   /* ── Login ── */
-  .login-wrap{
-    display:flex;align-items:center;justify-content:center;min-height:100vh;
-    background:linear-gradient(155deg,#030f1c 0%,#071e38 40%,#0b3060 100%);
-  }
-  .login-box{
-    background:rgba(255,255,255,.06);border:1px solid rgba(59,191,255,.25);
+  .login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;
+    background:linear-gradient(155deg,#030f1c 0%,#071e38 40%,#0b3060 100%);}
+  .login-box{background:rgba(255,255,255,.06);border:1px solid rgba(59,191,255,.25);
     border-radius:24px;padding:2.5rem 2rem;width:min(400px,94vw);
-    backdrop-filter:blur(12px);
-    box-shadow:0 30px 60px rgba(0,0,0,.5);
-  }
+    backdrop-filter:blur(12px);box-shadow:0 30px 60px rgba(0,0,0,.5);}
   .login-box h1{font-family:'Tajawal',sans-serif;font-size:1.8rem;font-weight:900;
     color:#3bbfff;text-shadow:0 0 20px rgba(59,191,255,.6);margin-bottom:.4rem;text-align:center;}
   .login-box p{font-size:.9rem;color:rgba(160,220,255,.65);text-align:center;margin-bottom:2rem;}
-  .login-box input{
-    width:100%;padding:.85rem 1rem;background:rgba(255,255,255,.07);
+  .login-box input{width:100%;padding:.85rem 1rem;background:rgba(255,255,255,.07);
     border:1.5px solid rgba(59,191,255,.3);border-radius:12px;
     color:#fff;font-size:1rem;outline:none;margin-bottom:1rem;
-    transition:border-color .25s;direction:ltr;text-align:center;letter-spacing:4px;
-  }
+    transition:border-color .25s;direction:ltr;text-align:center;}
   .login-box input:focus{border-color:#3bbfff;}
-  .login-box input::placeholder{letter-spacing:0;direction:rtl;text-align:center;color:rgba(160,220,255,.4);}
-  .btn-login{
-    width:100%;padding:.9rem;border:none;border-radius:12px;
+  .login-box input::placeholder{direction:rtl;text-align:center;color:rgba(160,220,255,.4);}
+  .btn-login{width:100%;padding:.9rem;border:none;border-radius:12px;
     background:linear-gradient(135deg,#1c86d0,#3bbfff);
     color:#fff;font-family:'Tajawal',sans-serif;font-weight:800;font-size:1.05rem;
-    transition:transform .2s,box-shadow .2s;
-  }
+    transition:transform .2s,box-shadow .2s;}
   .btn-login:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(59,191,255,.4);}
   .login-err{color:#ff6b6b;font-size:.88rem;text-align:center;margin-top:.6rem;display:none;}
 
   /* ── Dashboard ── */
   .dashboard{display:none;min-height:100vh;}
-  .topbar{
-    background:rgba(4,15,30,.9);backdrop-filter:blur(14px);
+  .topbar{background:rgba(4,15,30,.9);backdrop-filter:blur(14px);
     border-bottom:1px solid rgba(59,191,255,.2);
     padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;
-    position:sticky;top:0;z-index:50;
-  }
+    position:sticky;top:0;z-index:50;}
   .topbar h1{font-family:'Tajawal',sans-serif;font-size:1.3rem;font-weight:900;
     color:#3bbfff;text-shadow:0 0 14px rgba(59,191,255,.6);}
   .topbar-right{display:flex;align-items:center;gap:1rem;}
   .topbar-right a{color:rgba(160,220,255,.7);font-size:.88rem;font-weight:600;
-    padding:.45rem .9rem;border:1px solid rgba(59,191,255,.25);border-radius:8px;
-    transition:border-color .2s,color .2s;}
+    padding:.45rem .9rem;border:1px solid rgba(59,191,255,.25);border-radius:8px;transition:border-color .2s,color .2s;}
   .topbar-right a:hover{border-color:#3bbfff;color:#3bbfff;}
   .logout-btn{background:none;border:1px solid rgba(255,100,100,.35);
-    color:rgba(255,160,160,.8);padding:.45rem .9rem;border-radius:8px;font-size:.88rem;font-weight:600;
-    transition:border-color .2s,color .2s;}
+    color:rgba(255,160,160,.8);padding:.45rem .9rem;border-radius:8px;font-size:.88rem;font-weight:600;transition:border-color .2s,color .2s;}
   .logout-btn:hover{border-color:#ff6b6b;color:#ff6b6b;}
+
+  /* ── Tabs ── */
+  .tabs{display:flex;gap:0;border-bottom:1px solid rgba(59,191,255,.2);background:rgba(4,15,30,.5);}
+  .tab-btn{padding:.85rem 1.8rem;background:none;border:none;color:rgba(160,220,255,.6);
+    font-family:'Tajawal',sans-serif;font-weight:700;font-size:1rem;border-bottom:2px solid transparent;
+    transition:color .2s,border-color .2s;cursor:pointer;}
+  .tab-btn.active{color:#3bbfff;border-bottom-color:#3bbfff;}
+  .tab-btn:hover{color:#7fd6ff;}
 
   .main{max-width:1100px;margin:0 auto;padding:2rem 1.5rem;}
   .section-title{font-family:'Tajawal',sans-serif;font-size:1.4rem;font-weight:900;color:#7fd6ff;margin-bottom:1.2rem;}
 
-  /* ── Add product form ── */
-  .add-form{
-    background:rgba(255,255,255,.05);border:1px solid rgba(59,191,255,.2);
-    border-radius:20px;padding:2rem;margin-bottom:2.5rem;
-  }
+  /* ── Add/Edit product form ── */
+  .add-form{background:rgba(255,255,255,.05);border:1px solid rgba(59,191,255,.2);
+    border-radius:20px;padding:2rem;margin-bottom:2.5rem;}
   .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
   @media(max-width:600px){.form-grid{grid-template-columns:1fr;}}
   .field{display:flex;flex-direction:column;gap:.4rem;}
@@ -78,77 +71,96 @@
   .field input,.field textarea,.field select{
     padding:.75rem 1rem;background:rgba(255,255,255,.07);
     border:1.5px solid rgba(59,191,255,.25);border-radius:10px;
-    color:#fff;font-size:.95rem;outline:none;direction:rtl;
-    transition:border-color .25s;
-  }
-  .field input:focus,.field textarea:focus,.field select:focus{border-color:#3bbfff;}
+    color:#fff;font-size:.95rem;outline:none;direction:rtl;transition:border-color .25s;}
+  .field input[dir="ltr"]{direction:ltr;text-align:left;}
+  .field input:focus,.field textarea:focus{border-color:#3bbfff;}
   .field input::placeholder,.field textarea::placeholder{color:rgba(160,220,255,.35);}
   .field textarea{resize:vertical;min-height:80px;}
   .field-full{grid-column:1/-1;}
 
-  /* Image upload */
-  .img-upload-area{
-    border:2px dashed rgba(59,191,255,.35);border-radius:14px;
-    padding:1.5rem;text-align:center;cursor:pointer;
-    transition:border-color .25s,background .25s;position:relative;
-    min-height:120px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.5rem;
-  }
-  .img-upload-area:hover{border-color:#3bbfff;background:rgba(59,191,255,.06);}
-  .img-upload-area input[type=file]{
-    position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;
-  }
-  .img-upload-area .upload-icon{font-size:2rem;}
-  .img-upload-area p{color:rgba(160,220,255,.6);font-size:.9rem;}
-  .img-preview{max-height:140px;border-radius:10px;display:none;margin-top:.5rem;object-fit:cover;max-width:100%;}
+  /* Stock toggle in form */
+  .toggle-row{display:flex;align-items:center;gap:.8rem;padding:.5rem 0;}
+  .toggle-label{font-weight:700;font-size:.9rem;color:rgba(160,220,255,.8);}
+  .toggle-switch{width:46px;height:26px;border-radius:13px;background:#223;border:none;
+    position:relative;cursor:pointer;transition:background .3s;}
+  .toggle-switch.on{background:linear-gradient(135deg,#1c86d0,#3bbfff);}
+  .toggle-switch::after{content:'';position:absolute;top:3px;right:3px;width:20px;height:20px;
+    border-radius:50%;background:#fff;transition:transform .3s;}
+  .toggle-switch.on::after{transform:translateX(-20px);}
 
   .form-actions{margin-top:1.4rem;display:flex;gap:1rem;}
-  .btn-add{
-    padding:.85rem 2rem;border:none;border-radius:12px;
+  .btn-add{padding:.85rem 2rem;border:none;border-radius:12px;
     background:linear-gradient(135deg,#1c86d0,#3bbfff);
-    color:#fff;font-family:'Tajawal',sans-serif;font-weight:800;font-size:1rem;
-    transition:transform .2s,box-shadow .2s;
-  }
+    color:#fff;font-family:'Tajawal',sans-serif;font-weight:800;font-size:1rem;transition:transform .2s,box-shadow .2s;}
   .btn-add:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(59,191,255,.4);}
-  .btn-reset{
-    padding:.85rem 1.4rem;border:1.5px solid rgba(59,191,255,.3);border-radius:12px;
-    background:none;color:rgba(160,220,255,.7);font-family:'Tajawal',sans-serif;font-weight:700;font-size:1rem;
-    transition:border-color .2s,color .2s;
-  }
+  .btn-reset{padding:.85rem 1.4rem;border:1.5px solid rgba(59,191,255,.3);border-radius:12px;
+    background:none;color:rgba(160,220,255,.7);font-family:'Tajawal',sans-serif;font-weight:700;font-size:1rem;transition:border-color .2s,color .2s;}
   .btn-reset:hover{border-color:#3bbfff;color:#3bbfff;}
 
   /* ── Products list ── */
-  .products-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem;}
-  .prod-item{
-    background:rgba(255,255,255,.05);border:1px solid rgba(59,191,255,.18);
-    border-radius:18px;overflow:hidden;
-    transition:transform .3s,border-color .3s;
-  }
+  .products-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.2rem;}
+  .prod-item{background:rgba(255,255,255,.05);border:1px solid rgba(59,191,255,.18);
+    border-radius:18px;overflow:hidden;transition:transform .3s,border-color .3s;}
   .prod-item:hover{transform:translateY(-4px);border-color:rgba(59,191,255,.45);}
-  .prod-img{width:100%;height:200px;object-fit:cover;display:block;background:#071e38;}
-  .prod-img-placeholder{width:100%;height:200px;display:flex;align-items:center;justify-content:center;font-size:3.5rem;background:#071e38;color:rgba(127,214,255,.3);}
-  .prod-body{padding:1.2rem 1.2rem 1.4rem;}
-  .prod-name{font-family:'Tajawal',sans-serif;font-size:1.1rem;font-weight:800;color:#e8f6ff;margin-bottom:.3rem;}
-  .prod-desc{font-size:.88rem;color:rgba(160,220,255,.65);margin-bottom:.6rem;line-height:1.6;}
-  .prod-price{font-family:'Tajawal',sans-serif;font-weight:900;font-size:1.2rem;color:#3bbfff;margin-bottom:.9rem;}
-  .btn-delete{
-    width:100%;padding:.6rem;border:1px solid rgba(255,100,100,.35);border-radius:10px;
-    background:none;color:rgba(255,160,160,.8);font-family:'Tajawal',sans-serif;font-weight:700;font-size:.9rem;
-    transition:background .2s,color .2s,border-color .2s;
-  }
+  .prod-img{width:100%;height:190px;object-fit:cover;display:block;background:#071e38;}
+  .prod-img-placeholder{width:100%;height:190px;display:flex;align-items:center;justify-content:center;font-size:3.5rem;background:#071e38;color:rgba(127,214,255,.3);}
+  .prod-body{padding:1.1rem 1.1rem 1.3rem;}
+  .prod-name{font-family:'Tajawal',sans-serif;font-size:1.05rem;font-weight:800;color:#e8f6ff;margin-bottom:.25rem;}
+  .prod-desc{font-size:.85rem;color:rgba(160,220,255,.65);margin-bottom:.5rem;line-height:1.5;}
+  .prod-price{font-family:'Tajawal',sans-serif;font-weight:900;font-size:1.1rem;color:#3bbfff;margin-bottom:.8rem;}
+  .prod-actions{display:flex;gap:.5rem;flex-wrap:wrap;}
+  .btn-stock{flex:1;min-width:80px;padding:.5rem .8rem;border-radius:9px;font-family:'Tajawal',sans-serif;font-weight:700;font-size:.82rem;border:none;transition:opacity .2s,transform .2s;}
+  .btn-stock:hover{opacity:.85;transform:translateY(-1px);}
+  .btn-stock.available{background:rgba(34,197,94,.2);border:1px solid rgba(34,197,94,.5);color:#4ade80;}
+  .btn-stock.unavailable{background:rgba(239,68,68,.18);border:1px solid rgba(239,68,68,.4);color:#f87171;}
+  .btn-edit{padding:.5rem .8rem;border-radius:9px;border:1px solid rgba(59,191,255,.3);
+    background:none;color:rgba(160,220,255,.8);font-family:'Tajawal',sans-serif;font-weight:700;font-size:.82rem;transition:border-color .2s,color .2s;}
+  .btn-edit:hover{border-color:#3bbfff;color:#3bbfff;}
+  .btn-delete{padding:.5rem .8rem;border-radius:9px;border:1px solid rgba(255,100,100,.35);
+    background:none;color:rgba(255,160,160,.8);font-family:'Tajawal',sans-serif;font-weight:700;font-size:.82rem;transition:background .2s,color .2s,border-color .2s;}
   .btn-delete:hover{background:rgba(255,60,60,.15);color:#ff6b6b;border-color:#ff6b6b;}
+  .stock-badge{display:inline-block;padding:.2rem .7rem;border-radius:100px;font-size:.75rem;font-weight:700;margin-bottom:.6rem;}
+  .stock-badge.in{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.3);}
+  .stock-badge.out{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);}
 
   .empty-state{text-align:center;padding:3rem 1rem;color:rgba(160,220,255,.4);}
   .empty-state .ico{font-size:3rem;margin-bottom:.8rem;}
 
-  /* Toast */
-  .toast{
-    position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);
+  /* ── Orders ── */
+  .orders-list{display:flex;flex-direction:column;gap:1.2rem;}
+  .order-card{background:rgba(255,255,255,.05);border:1px solid rgba(59,191,255,.18);border-radius:18px;overflow:hidden;}
+  .order-header{padding:1rem 1.2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;border-bottom:1px solid rgba(59,191,255,.1);}
+  .order-id{font-size:.8rem;color:rgba(160,220,255,.5);}
+  .order-name{font-family:'Tajawal',sans-serif;font-weight:800;font-size:1rem;color:#e8f6ff;}
+  .order-phone{font-size:.88rem;color:#7fd6ff;direction:ltr;text-align:right;}
+  .order-total{font-family:'Tajawal',sans-serif;font-weight:900;font-size:1.15rem;color:#3bbfff;}
+  .order-date{font-size:.78rem;color:rgba(160,220,255,.45);}
+  .order-body{padding:1rem 1.2rem;}
+  .order-address{font-size:.88rem;color:rgba(160,220,255,.7);margin-bottom:.7rem;}
+  .order-notes{font-size:.82rem;color:rgba(160,220,255,.5);font-style:italic;margin-bottom:.7rem;}
+  .order-items-list{background:rgba(0,0,0,.2);border-radius:10px;padding:.8rem 1rem;margin-bottom:.8rem;}
+  .order-item-row{display:flex;justify-content:space-between;font-size:.88rem;padding:.25rem 0;border-bottom:1px solid rgba(255,255,255,.05);}
+  .order-item-row:last-child{border-bottom:none;}
+  .status-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+  .status-badge{padding:.3rem .9rem;border-radius:100px;font-size:.82rem;font-weight:700;}
+  .status-pending{background:rgba(234,179,8,.15);color:#fbbf24;border:1px solid rgba(234,179,8,.3);}
+  .status-confirmed{background:rgba(59,130,246,.15);color:#60a5fa;border:1px solid rgba(59,130,246,.3);}
+  .status-delivered{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.3);}
+  .status-cancelled{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);}
+  .btn-status{padding:.28rem .8rem;border-radius:100px;background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.15);color:rgba(160,220,255,.7);font-size:.78rem;font-weight:600;transition:background .2s,border-color .2s;}
+  .btn-status:hover{background:rgba(59,191,255,.15);border-color:rgba(59,191,255,.4);color:#7fd6ff;}
+
+  /* ── Toast ── */
+  .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);
     background:rgba(10,50,90,.95);border:1px solid rgba(59,191,255,.4);
     border-radius:12px;padding:.8rem 1.5rem;color:#7fd6ff;font-weight:700;font-size:.95rem;
-    transition:transform .4s cubic-bezier(.34,1.56,.64,1);z-index:999;white-space:nowrap;
-    backdrop-filter:blur(10px);
-  }
+    transition:transform .4s cubic-bezier(.34,1.56,.64,1);z-index:999;white-space:nowrap;backdrop-filter:blur(10px);}
   .toast.show{transform:translateX(-50%) translateY(0);}
+
+  .spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(59,191,255,.3);
+    border-top-color:#3bbfff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;}
+  @keyframes spin{to{transform:rotate(360deg);}}
 </style>
 </head>
 <body>
@@ -157,10 +169,11 @@
 <div class="login-wrap" id="loginWrap">
   <div class="login-box">
     <h1>❄ ICEBATH.IRAQ</h1>
-    <p>لوحة تحكم الأدمن — أدخل كلمة المرور</p>
+    <p>لوحة تحكم الأدمن</p>
+    <input type="text" id="userInput" placeholder="اسم المستخدم" autocomplete="username" style="letter-spacing:0">
     <input type="password" id="pwdInput" placeholder="كلمة المرور" autocomplete="current-password">
     <button class="btn-login" id="loginBtn">دخول</button>
-    <p class="login-err" id="loginErr">❌ كلمة المرور غلط</p>
+    <p class="login-err" id="loginErr">❌ بيانات الدخول غير صحيحة</p>
   </div>
 </div>
 
@@ -174,10 +187,17 @@
     </div>
   </div>
 
-  <div class="main">
-    <!-- Add Product Form -->
-    <div class="add-form">
-      <p class="section-title">➕ أضف منتج جديد</p>
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" id="tabProducts" onclick="switchTab('products')">📦 المنتجات</button>
+    <button class="tab-btn" id="tabOrders" onclick="switchTab('orders')">📬 الطلبات</button>
+  </div>
+
+  <!-- Products Tab -->
+  <div id="panelProducts" class="main">
+    <div class="add-form" id="addForm">
+      <p class="section-title" id="formTitle">➕ أضف منتج جديد</p>
+      <input type="hidden" id="editId">
       <div class="form-grid">
         <div class="field">
           <label>اسم المنتج *</label>
@@ -185,19 +205,20 @@
         </div>
         <div class="field">
           <label>السعر (دينار عراقي) *</label>
-          <input type="number" id="pPrice" placeholder="مثال: 85000" min="0" required>
+          <input type="number" id="pPrice" placeholder="مثال: 85000" min="0" required dir="ltr">
         </div>
         <div class="field field-full">
           <label>الوصف</label>
           <textarea id="pDesc" placeholder="وصف المنتج..."></textarea>
         </div>
         <div class="field field-full">
-          <label>صورة المنتج (من التطبيق)</label>
-          <div class="img-upload-area" id="uploadArea">
-            <input type="file" id="imgInput" accept="image/*">
-            <div class="upload-icon">📸</div>
-            <p>اضغط لاختيار صورة من مكتبة الصور</p>
-            <img id="imgPreview" class="img-preview" alt="معاينة">
+          <label>رابط الصورة (URL)</label>
+          <input type="url" id="pImg" placeholder="https://example.com/image.jpg" dir="ltr">
+        </div>
+        <div class="field field-full">
+          <div class="toggle-row">
+            <button type="button" class="toggle-switch on" id="stockToggle" onclick="toggleFormStock()"></button>
+            <span class="toggle-label" id="stockLabel">متوفر في المخزون</span>
           </div>
         </div>
       </div>
@@ -207,12 +228,21 @@
       </div>
     </div>
 
-    <!-- Products List -->
-    <p class="section-title">📦 المنتجات الحالية</p>
+    <p class="section-title">📦 المنتجات الحالية <span id="productsCount" style="font-size:.9rem;opacity:.6;"></span></p>
     <div class="products-list" id="productsList"></div>
-    <div class="empty-state" id="emptyState">
+    <div class="empty-state" id="emptyState" style="display:none;">
       <div class="ico">❄️</div>
       <p>لا يوجد منتجات بعد — أضف أول منتج!</p>
+    </div>
+  </div>
+
+  <!-- Orders Tab -->
+  <div id="panelOrders" class="main" style="display:none;">
+    <p class="section-title">📬 الطلبات الواردة <span id="ordersCount" style="font-size:.9rem;opacity:.6;"></span></p>
+    <div class="orders-list" id="ordersList"></div>
+    <div class="empty-state" id="emptyOrdersState" style="display:none;">
+      <div class="ico">📭</div>
+      <p>لا توجد طلبات بعد</p>
     </div>
   </div>
 </div>
@@ -220,139 +250,257 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ── Config ──────────────────────────────────────────
-const ADMIN_PASSWORD = 'icebath2024';
-const STORAGE_KEY = 'icebath_products';
+const API = '';  // same origin — calls go to /api/...
 
-// ── Auth ─────────────────────────────────────────────
-function checkAuth() {
-  return sessionStorage.getItem('admin_auth') === '1';
-}
-function showDashboard() {
-  document.getElementById('loginWrap').style.display = 'none';
-  document.getElementById('dashboard').style.display = 'block';
-  renderProducts();
+// ─── State ───────────────────────────────────────────
+let formInStock = true;
+
+// ─── Auth ─────────────────────────────────────────────
+async function checkAuth() {
+  try {
+    const r = await fetch(API + '/api/admin/me', { credentials: 'include' });
+    return r.ok;
+  } catch { return false; }
 }
 
-if (checkAuth()) showDashboard();
+async function init() {
+  if (await checkAuth()) showDashboard();
+}
+init();
 
 document.getElementById('loginBtn').addEventListener('click', doLogin);
 document.getElementById('pwdInput').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+document.getElementById('userInput').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('pwdInput').focus(); });
 
-function doLogin() {
-  const val = document.getElementById('pwdInput').value;
-  if (val === ADMIN_PASSWORD) {
-    sessionStorage.setItem('admin_auth', '1');
-    document.getElementById('loginErr').style.display = 'none';
-    showDashboard();
-  } else {
-    document.getElementById('loginErr').style.display = 'block';
-    document.getElementById('pwdInput').value = '';
-  }
+async function doLogin() {
+  const username = document.getElementById('userInput').value.trim();
+  const password = document.getElementById('pwdInput').value;
+  const err = document.getElementById('loginErr');
+  err.style.display = 'none';
+  if (!username || !password) { err.textContent = '⚠️ أدخل اسم المستخدم وكلمة المرور'; err.style.display = 'block'; return; }
+  try {
+    const r = await fetch(API + '/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ username, password })
+    });
+    if (r.ok) { showDashboard(); }
+    else {
+      const d = await r.json();
+      err.textContent = '❌ ' + (d.error || 'خطأ في الدخول');
+      err.style.display = 'block';
+      document.getElementById('pwdInput').value = '';
+    }
+  } catch { err.textContent = '❌ تعذر الاتصال بالخادم'; err.style.display = 'block'; }
 }
 
-document.getElementById('logoutBtn').addEventListener('click', () => {
-  sessionStorage.removeItem('admin_auth');
+function showDashboard() {
+  document.getElementById('loginWrap').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  loadProducts();
+  loadOrders();
+}
+
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  await fetch(API + '/api/admin/logout', { method: 'POST', credentials: 'include' });
   location.reload();
 });
 
-// ── Image upload ─────────────────────────────────────
-let selectedImage = null;
-
-document.getElementById('imgInput').addEventListener('change', function() {
-  const file = this.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    selectedImage = e.target.result;
-    const preview = document.getElementById('imgPreview');
-    preview.src = selectedImage;
-    preview.style.display = 'block';
-    document.getElementById('uploadArea').querySelector('p').textContent = file.name;
-  };
-  reader.readAsDataURL(file);
-});
-
-// ── Products CRUD ─────────────────────────────────────
-function getProducts() {
-  return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-}
-function saveProducts(products) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
-  // Notify other tabs
-  window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }));
+// ─── Tabs ─────────────────────────────────────────────
+function switchTab(tab) {
+  document.getElementById('panelProducts').style.display = tab === 'products' ? 'block' : 'none';
+  document.getElementById('panelOrders').style.display = tab === 'orders' ? 'block' : 'none';
+  document.getElementById('tabProducts').classList.toggle('active', tab === 'products');
+  document.getElementById('tabOrders').classList.toggle('active', tab === 'orders');
+  if (tab === 'orders') loadOrders();
 }
 
-function renderProducts() {
-  const products = getProducts();
+// ─── Products ─────────────────────────────────────────
+async function loadProducts() {
   const list = document.getElementById('productsList');
   const empty = document.getElementById('emptyState');
-
-  if (products.length === 0) {
-    list.innerHTML = '';
-    empty.style.display = 'block';
-    return;
-  }
-  empty.style.display = 'none';
-  list.innerHTML = products.map(p => `
-    <div class="prod-item" data-id="${p.id}">
-      ${p.image
-        ? `<img src="${p.image}" class="prod-img" alt="${p.name}" loading="lazy">`
-        : `<div class="prod-img-placeholder">❄</div>`}
-      <div class="prod-body">
-        <div class="prod-name">${p.name}</div>
-        ${p.description ? `<div class="prod-desc">${p.description}</div>` : ''}
-        <div class="prod-price">${Number(p.price).toLocaleString()} د.ع</div>
-        <button class="btn-delete" onclick="deleteProduct('${p.id}')">🗑 حذف المنتج</button>
+  list.innerHTML = '<div style="padding:2rem;text-align:center;"><span class="spinner"></span></div>';
+  try {
+    const r = await fetch(API + '/api/admin/products', { credentials: 'include' });
+    const products = await r.json();
+    document.getElementById('productsCount').textContent = '(' + products.length + ')';
+    if (!products.length) { list.innerHTML = ''; empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    list.innerHTML = products.map(p => `
+      <div class="prod-item" id="prod-${p.id}">
+        ${p.imageUrl
+          ? `<img src="${escHtml(p.imageUrl)}" class="prod-img" alt="${escHtml(p.name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-img-placeholder" style="display:none;">❄</div>`
+          : `<div class="prod-img-placeholder">❄</div>`}
+        <div class="prod-body">
+          <span class="stock-badge ${p.inStock ? 'in' : 'out'}">${p.inStock ? '✅ متوفر' : '❌ نفذ'}</span>
+          <div class="prod-name">${escHtml(p.name)}</div>
+          ${p.description ? `<div class="prod-desc">${escHtml(p.description)}</div>` : ''}
+          <div class="prod-price">${Number(p.price).toLocaleString('ar-IQ')} د.ع</div>
+          <div class="prod-actions">
+            <button class="btn-stock ${p.inStock ? 'available' : 'unavailable'}" onclick="toggleStock(${p.id},${!p.inStock})">
+              ${p.inStock ? '⬛ جعله غير متوفر' : '✅ جعله متوفر'}
+            </button>
+            <button class="btn-edit" onclick="editProduct(${p.id})">✏️ تعديل</button>
+            <button class="btn-delete" onclick="deleteProduct(${p.id},'${escHtml(p.name)}')">🗑</button>
+          </div>
+        </div>
       </div>
-    </div>
-  `).join('');
+    `).join('');
+  } catch { list.innerHTML = '<p style="text-align:center;color:#ff6b6b;padding:2rem;">تعذر تحميل المنتجات</p>'; }
 }
 
-document.getElementById('addBtn').addEventListener('click', () => {
-  const name  = document.getElementById('pName').value.trim();
-  const price = document.getElementById('pPrice').value.trim();
-  const desc  = document.getElementById('pDesc').value.trim();
-
-  if (!name || !price) { showToast('⚠️ اسم المنتج والسعر مطلوبان'); return; }
-
-  const products = getProducts();
-  products.push({
-    id: Date.now().toString(),
-    name,
-    price: Number(price),
-    description: desc,
-    image: selectedImage || null,
-    createdAt: new Date().toISOString()
-  });
-  saveProducts(products);
-  renderProducts();
-  resetForm();
-  showToast('✅ تم حفظ المنتج بنجاح');
-});
-
-document.getElementById('resetBtn').addEventListener('click', resetForm);
+let formStockVal = true;
+function toggleFormStock() {
+  formStockVal = !formStockVal;
+  const btn = document.getElementById('stockToggle');
+  const lbl = document.getElementById('stockLabel');
+  btn.classList.toggle('on', formStockVal);
+  lbl.textContent = formStockVal ? 'متوفر في المخزون' : 'غير متوفر';
+}
 
 function resetForm() {
+  document.getElementById('editId').value = '';
   document.getElementById('pName').value = '';
   document.getElementById('pPrice').value = '';
   document.getElementById('pDesc').value = '';
-  document.getElementById('imgPreview').style.display = 'none';
-  document.getElementById('imgPreview').src = '';
-  document.getElementById('uploadArea').querySelector('p').textContent = 'اضغط لاختيار صورة من مكتبة الصور';
-  document.getElementById('imgInput').value = '';
-  selectedImage = null;
+  document.getElementById('pImg').value = '';
+  formStockVal = true;
+  document.getElementById('stockToggle').classList.add('on');
+  document.getElementById('stockLabel').textContent = 'متوفر في المخزون';
+  document.getElementById('formTitle').textContent = '➕ أضف منتج جديد';
+  document.getElementById('addBtn').textContent = 'حفظ المنتج ✅';
+}
+document.getElementById('resetBtn').addEventListener('click', resetForm);
+
+async function saveProduct() {
+  const name  = document.getElementById('pName').value.trim();
+  const price = document.getElementById('pPrice').value.trim();
+  const desc  = document.getElementById('pDesc').value.trim();
+  const img   = document.getElementById('pImg').value.trim();
+  const editId = document.getElementById('editId').value;
+
+  if (!name || !price) { showToast('⚠️ اسم المنتج والسعر مطلوبان'); return; }
+
+  const body = { name, price: parseInt(price), description: desc || null, imageUrl: img || null, inStock: formStockVal };
+  const url = editId ? `${API}/api/admin/products/${editId}` : `${API}/api/admin/products`;
+  const method = editId ? 'PUT' : 'POST';
+
+  try {
+    const r = await fetch(url, { method, headers: {'Content-Type':'application/json'}, credentials:'include', body: JSON.stringify(body) });
+    if (r.ok) {
+      showToast(editId ? '✅ تم تعديل المنتج' : '✅ تم حفظ المنتج بنجاح');
+      resetForm();
+      await loadProducts();
+    } else { showToast('❌ حدث خطأ'); }
+  } catch { showToast('❌ تعذر الاتصال'); }
+}
+document.getElementById('addBtn').addEventListener('click', saveProduct);
+
+async function editProduct(id) {
+  try {
+    const r = await fetch(`${API}/api/admin/products/${id}`, { credentials: 'include' });
+    // get from DOM since we don't have a GET single product in admin API yet
+    // instead, re-fetch the products list and find the product
+    const allR = await fetch(`${API}/api/admin/products`, { credentials: 'include' });
+    const all = await allR.json();
+    const p = all.find(x => x.id === id);
+    if (!p) return;
+    document.getElementById('editId').value = p.id;
+    document.getElementById('pName').value = p.name;
+    document.getElementById('pPrice').value = p.price;
+    document.getElementById('pDesc').value = p.description || '';
+    document.getElementById('pImg').value = p.imageUrl || '';
+    formStockVal = p.inStock;
+    document.getElementById('stockToggle').classList.toggle('on', p.inStock);
+    document.getElementById('stockLabel').textContent = p.inStock ? 'متوفر في المخزون' : 'غير متوفر';
+    document.getElementById('formTitle').textContent = '✏️ تعديل المنتج';
+    document.getElementById('addBtn').textContent = 'حفظ التعديلات ✅';
+    document.getElementById('addForm').scrollIntoView({ behavior: 'smooth' });
+  } catch { showToast('❌ تعذر تحميل المنتج'); }
 }
 
-function deleteProduct(id) {
-  if (!confirm('تأكد: تريد تحذف هذا المنتج؟')) return;
-  const products = getProducts().filter(p => p.id !== id);
-  saveProducts(products);
-  renderProducts();
-  showToast('🗑 تم حذف المنتج');
+async function toggleStock(id, newVal) {
+  try {
+    const r = await fetch(`${API}/api/admin/products/${id}/stock`, {
+      method: 'PATCH', headers: {'Content-Type':'application/json'},
+      credentials: 'include', body: JSON.stringify({ inStock: newVal })
+    });
+    if (r.ok) { showToast(newVal ? '✅ أصبح متوفر' : '⬛ أصبح غير متوفر'); await loadProducts(); }
+  } catch { showToast('❌ تعذر التحديث'); }
 }
 
-// ── Toast ─────────────────────────────────────────────
+async function deleteProduct(id, name) {
+  if (!confirm(`تأكيد حذف: "${name}"؟`)) return;
+  try {
+    const r = await fetch(`${API}/api/admin/products/${id}`, { method: 'DELETE', credentials: 'include' });
+    if (r.ok) { showToast('🗑 تم حذف المنتج'); await loadProducts(); }
+  } catch { showToast('❌ تعذر الحذف'); }
+}
+
+// ─── Orders ───────────────────────────────────────────
+const STATUS_LABELS = { pending: 'جديد', confirmed: 'مؤكد', delivered: 'مُسلَّم', cancelled: 'ملغي' };
+const STATUS_CLASS  = { pending: 'pending', confirmed: 'confirmed', delivered: 'delivered', cancelled: 'cancelled' };
+
+async function loadOrders() {
+  const list = document.getElementById('ordersList');
+  const empty = document.getElementById('emptyOrdersState');
+  list.innerHTML = '<div style="padding:2rem;text-align:center;"><span class="spinner"></span></div>';
+  try {
+    const r = await fetch(API + '/api/admin/orders', { credentials: 'include' });
+    const orders = await r.json();
+    document.getElementById('ordersCount').textContent = '(' + orders.length + ')';
+    if (!orders.length) { list.innerHTML = ''; empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    list.innerHTML = orders.map(o => `
+      <div class="order-card">
+        <div class="order-header">
+          <div>
+            <div class="order-id">#${o.id} &nbsp;•&nbsp; ${new Date(o.createdAt).toLocaleString('ar-IQ')}</div>
+            <div class="order-name">${escHtml(o.customerName)}</div>
+          </div>
+          <div style="text-align:left;">
+            <div class="order-phone">${escHtml(o.customerPhone)}</div>
+            <div class="order-total">${Number(o.total).toLocaleString('ar-IQ')} د.ع</div>
+          </div>
+        </div>
+        <div class="order-body">
+          <div class="order-address">📍 ${escHtml(o.customerAddress)}</div>
+          ${o.notes ? `<div class="order-notes">📝 ${escHtml(o.notes)}</div>` : ''}
+          <div class="order-items-list">
+            ${(o.items || []).map(i => `
+              <div class="order-item-row">
+                <span>${escHtml(i.productName)} × ${i.quantity}</span>
+                <span style="color:#7fd6ff;">${(i.price * i.quantity).toLocaleString('ar-IQ')} د.ع</span>
+              </div>
+            `).join('')}
+          </div>
+          <div class="status-row">
+            <span class="status-badge status-${STATUS_CLASS[o.status] || 'pending'}">${STATUS_LABELS[o.status] || o.status}</span>
+            ${['pending','confirmed','delivered','cancelled'].filter(s => s !== o.status).map(s => `
+              <button class="btn-status" onclick="updateOrderStatus(${o.id},'${s}')">${STATUS_LABELS[s]}</button>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    `).join('');
+  } catch { list.innerHTML = '<p style="text-align:center;color:#ff6b6b;padding:2rem;">تعذر تحميل الطلبات</p>'; }
+}
+
+async function updateOrderStatus(id, status) {
+  try {
+    const r = await fetch(`${API}/api/admin/orders/${id}`, {
+      method: 'PATCH', headers: {'Content-Type':'application/json'},
+      credentials: 'include', body: JSON.stringify({ status })
+    });
+    if (r.ok) { showToast('✅ تم تحديث الطلب'); await loadOrders(); }
+  } catch { showToast('❌ تعذر التحديث'); }
+}
+
+// ─── Helpers ──────────────────────────────────────────
+function escHtml(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
