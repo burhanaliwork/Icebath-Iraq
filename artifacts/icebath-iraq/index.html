@@ -541,9 +541,10 @@
   .cart-success-box p{font-size:.88rem;color:var(--slate);}
 
   /* ---------- Product image ---------- */
-  .product-img-wrap{padding:0!important;overflow:hidden;border-radius:16px 16px 0 0;}
-  .product-real-img{width:100%;height:380px;object-fit:cover;display:block;cursor:pointer;transition:transform .35s var(--ease),filter .35s var(--ease);}
-  .product-real-img:hover{transform:scale(1.03);filter:brightness(1.08);}
+  .product-img-wrap{padding:0!important;overflow:hidden;border-radius:16px 16px 0 0;aspect-ratio:unset!important;position:relative;min-height:320px;}
+  .product-real-img{width:100%;height:100%;min-height:320px;object-fit:cover;display:block;cursor:zoom-in;transition:transform .35s var(--ease),filter .35s var(--ease);}
+  .product-real-img:hover{transform:scale(1.04);filter:brightness(1.08);}
+  .product-img-placeholder{display:flex;align-items:center;justify-content:center;min-height:320px;font-size:4rem;color:rgba(127,214,255,.4);}
 
   /* ---------- Lightbox ---------- */
   #lightbox{position:fixed;inset:0;background:rgba(5,15,35,.92);z-index:9999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s ease;backdrop-filter:blur(6px);}
@@ -1176,8 +1177,8 @@ async function loadProducts() {
       <div class="product-card reveal" data-id="${p.id}">
         <div class="product-visual product-img-wrap" style="background:#0b1f3a;">
           ${p.imageUrl
-            ? `<img src="${p.imageUrl}" alt="${p.name}" class="product-real-img" loading="lazy" style="height:260px;object-fit:cover;">`
-            : `<div style="display:flex;align-items:center;justify-content:center;height:260px;font-size:4rem;color:rgba(127,214,255,.4);">❄</div>`}
+            ? `<img src="${p.imageUrl}" alt="${p.name}" class="product-real-img" loading="lazy">`
+            : `<div class="product-img-placeholder">❄</div>`}
         </div>
         <div class="product-info">
           <h3>${p.name}</h3>
@@ -1379,8 +1380,10 @@ function closeLightbox() {
   lightboxImg.src = '';
 }
 
-document.querySelectorAll('.product-real-img').forEach(img => {
-  img.addEventListener('click', () => openLightbox(img.src, img.alt));
+// Event delegation — works with dynamically loaded product images
+document.addEventListener('click', e => {
+  const img = e.target.closest('.product-real-img');
+  if (img) openLightbox(img.src, img.alt);
 });
 lightboxClose.addEventListener('click', closeLightbox);
 lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
