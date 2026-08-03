@@ -30,13 +30,18 @@ app.use(express.urlencoded({ extended: true }));
 
 const isProd = process.env["NODE_ENV"] === "production";
 
-// Trust Northflank / Render / any reverse-proxy one hop away so that:
+// Trust Back4App / Northflank / Render / any reverse-proxy one hop away so that:
 //  - req.secure is true (needed for Secure cookies over HTTPS)
 //  - req.ip reflects the real client IP, not the proxy IP
 if (isProd) {
   app.set("trust proxy", 1);
 }
 
+// NOTE: Using the default in-memory session store (MemoryStore).
+// This logs a warning in production and resets all sessions on every restart.
+// It is acceptable for a single-container deployment — sessions persist while
+// the container is running. To survive restarts, replace with connect-pg-simple
+// or a Redis store and set SESSION_STORE_URL accordingly.
 app.use(
   session({
     secret: process.env["SESSION_SECRET"] || "fallback-dev-secret",

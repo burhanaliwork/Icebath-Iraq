@@ -10,7 +10,19 @@ if (!process.env.DATABASE_URL) {
   );
 }
 
-export const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+// Neon (and most hosted Postgres providers) require SSL in production.
+// rejectUnauthorized: false accepts Neon's self-signed / intermediate cert
+// without needing to bundle a CA cert in the container image.
+// In development (local Postgres) SSL is left off to avoid connection errors.
+const sslConfig =
+  process.env.NODE_ENV === "production"
+    ? { ssl: { rejectUnauthorized: false } }
+    : {};
+
+export const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ...sslConfig,
+});
 export const db = drizzle(pool, { schema });
 
 export * from "./schema";
