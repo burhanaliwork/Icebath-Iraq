@@ -25,8 +25,12 @@ app.use(
 );
 
 app.use(cors({ origin: true, credentials: true }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// 10 MB limit — needed because product images are sent as base64 data-URLs
+// inside the JSON body (a 800px JPEG at 0.8q is ~150–400 KB base64).
+// The default 100 KB limit causes Express to reject those requests with 413
+// before the route handler runs, which produces a silent failure.
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
 const isProd = process.env["NODE_ENV"] === "production";
 

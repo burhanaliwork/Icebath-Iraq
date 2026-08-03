@@ -471,8 +471,23 @@ async function saveProduct() {
       showToast(editId ? '✅ تم تعديل المنتج' : '✅ تم حفظ المنتج بنجاح');
       resetForm();
       await loadProducts();
-    } else { showToast('❌ حدث خطأ'); }
-  } catch { showToast('❌ تعذر الاتصال'); }
+    } else {
+      let errMsg = `خطأ ${r.status}`;
+      try {
+        const errBody = await r.json();
+        console.error('[saveProduct] server error:', r.status, errBody);
+        errMsg = `خطأ ${r.status}: ${errBody.error || errBody.message || JSON.stringify(errBody)}`;
+      } catch {
+        const errText = await r.text().catch(() => '');
+        console.error('[saveProduct] server error:', r.status, errText);
+        errMsg = `خطأ ${r.status}${errText ? ': ' + errText.slice(0, 120) : ''}`;
+      }
+      showToast('❌ ' + errMsg);
+    }
+  } catch (err) {
+    console.error('[saveProduct] network/JS error:', err);
+    showToast('❌ تعذر الاتصال: ' + (err.message || err));
+  }
 }
 document.getElementById('addBtn').addEventListener('click', saveProduct);
 

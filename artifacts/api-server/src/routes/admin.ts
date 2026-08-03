@@ -4,6 +4,7 @@ import { productsTable, ordersTable, orderItemsTable, adminUsersTable } from "@w
 import { eq, desc } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { requireAdmin } from "../middlewares/auth";
+import { logger } from "../lib/logger";
 
 const router = Router();
 
@@ -20,7 +21,8 @@ router.post("/admin/login", async (req, res) => {
     (req.session as any).adminId = admin.id;
     (req.session as any).adminUsername = admin.username;
     res.json({ ok: true, username: admin.username });
-  } catch {
+  } catch (err) {
+    logger.error({ err }, "Login error");
     res.status(500).json({ error: "Login failed" });
   }
 });
@@ -38,20 +40,31 @@ router.get("/admin/me", (req, res) => {
 // ── Products ──────────────────────────────────────────────────────────────────
 
 router.get("/admin/products", requireAdmin, async (_req, res) => {
-  const products = await db.select().from(productsTable).orderBy(desc(productsTable.createdAt));
-  res.json(products);
+  try {
+    const products = await db.select().from(productsTable).orderBy(desc(productsTable.createdAt));
+    res.json(products);
+  } catch (err) {
+    logger.error({ err }, "Failed to fetch products");
+    res.status(500).json({ error: "Failed to fetch products" });
+  }
 });
 
 router.post("/admin/products", requireAdmin, async (req, res) => {
   try {
     const { name, description, price, imageUrl, inStock } = req.body;
+    logger.info({ name, price, hasImage: !!imageUrl, inStock }, "Creating product");
     const [product] = await db.insert(productsTable).values({
-      name, description: description || null, price: parseInt(price),
-      imageUrl: imageUrl || null, inStock: inStock !== false,
+      name,
+      description: description || null,
+      price: parseInt(price),
+      imageUrl: imageUrl || null,
+      inStock: inStock !== false,
     }).returning();
+    logger.info({ productId: product.id }, "Product created");
     res.status(201).json(product);
-  } catch {
-    res.status(400).json({ error: "Failed to create product" });
+  } catch (err) {
+    logger.error({ err }, "Failed to create product");
+    res.status(400).json({ error: "Failed to create product", detail: String(err) });
   }
 });
 
@@ -59,13 +72,16 @@ router.put("/admin/products/:id", requireAdmin, async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     const { name, description, price, imageUrl, inStock } = req.body;
+    logger.info({ id, name, price, hasImage: !!imageUrl, inStock }, "Updating product");
     const [product] = await db.update(productsTable)
       .set({ name, description: description || null, price: parseInt(price), imageUrl: imageUrl || null, inStock })
       .where(eq(productsTable.id, id)).returning();
     if (!product) { res.status(404).json({ error: "Not found" }); return; }
+    logger.info({ productId: product.id }, "Product updated");
     res.json(product);
-  } catch {
-    res.status(400).json({ error: "Failed to update product" });
+  } catch (err) {
+    logger.error({ err }, "Failed to update product");
+    res.status(400).json({ error: "Failed to update product", detail: String(err) });
   }
 });
 
@@ -76,8 +92,9 @@ router.patch("/admin/products/:id/stock", requireAdmin, async (req, res) => {
       .set({ inStock: req.body.inStock })
       .where(eq(productsTable.id, id)).returning();
     res.json(product);
-  } catch {
-    res.status(400).json({ error: "Failed to update stock" });
+  } catch (err) {
+    logger.error({ err }, "Failed to update stock");
+    res.status(400).json({ error: "Failed to update stock", detail: String(err) });
   }
 });
 
@@ -85,8 +102,9 @@ router.delete("/admin/products/:id", requireAdmin, async (req, res) => {
   try {
     await db.delete(productsTable).where(eq(productsTable.id, parseInt(req.params.id)));
     res.json({ ok: true });
-  } catch {
-    res.status(400).json({ error: "Failed to delete product" });
+  } catch (err) {
+    logger.error({ err }, "Failed to delete product");
+    res.status(400).json({ error: "Failed to delete product", detail: String(err) });
   }
 });
 
@@ -100,7 +118,8 @@ router.get("/admin/orders", requireAdmin, async (_req, res) => {
       return { ...order, items };
     }));
     res.json(ordersWithItems);
-  } catch {
+  } catch (err) {
+    logger.error({ err }, "Failed to fetch orders");
     res.status(500).json({ error: "Failed to fetch orders" });
   }
 });
@@ -111,8 +130,9 @@ router.patch("/admin/orders/:id", requireAdmin, async (req, res) => {
       .set({ status: req.body.status })
       .where(eq(ordersTable.id, parseInt(req.params.id))).returning();
     res.json(order);
-  } catch {
-    res.status(400).json({ error: "Failed to update order" });
+  } catch (err) {
+    logger.error({ err }, "Failed to update order");
+    res.status(400).json({ error: "Failed to update order", detail: String(err) });
   }
 });
 
