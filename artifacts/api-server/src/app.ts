@@ -8,12 +8,19 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import router from "./routes";
 import { logger } from "./lib/logger";
+import { pool } from "@workspace/db";
 
 const app: Express = express();
 
 app.use(
   pinoHttp({
     logger,
+    // Log 4xx as warn, 5xx as error so they stand out in Back4App log stream
+    customLogLevel(_req, res, err) {
+      if (err || res.statusCode >= 500) return "error";
+      if (res.statusCode >= 400) return "warn";
+      return "info";
+    },
     serializers: {
       req(req) {
         return { id: req.id, method: req.method, url: req.url?.split("?")[0] };
@@ -47,22 +54,18 @@ if (isProd) {
 // Falls back to MemoryStore only when DATABASE_URL is not set (local dev without DB).
 const PgSession = ConnectPgSimple(session);
 
-const sessionStore = process.env["DATABASE_URL"]
-  ? new PgSession({
-      conString: process.env["DATABASE_URL"],
-      // connect-pg-simple creates the "session" table automatically on first use
-      // if it doesn't already exist (createTableIfMissing: true).
-      createTableIfMissing: true,
-      // Prune expired sessions every hour
-      pruneSessionInterval: 60 * 60,
-      // Use SSL in production (same config as the main DB pool)
-      pool: undefined, // let it create its own pool from conString
-    })
-  : undefined;
+// Re-use the already-configured pg.Pool from @workspace/db.
+// That pool already has rejectUnauthorized:false for Neon SSL — no need to
+// duplicate the config here. Passing pool= directly avoids the bug where
+// connect-pg-simple's internal pool ignores SSL and silently falls back to
+// MemoryStore when the Neon TLS handshake fails.
+const sessionStore = new PgSession({
+  pool,
+  createTableIfMissing: true,   // creates "session" table on first boot
+  pruneSessionInterval: 60 * 60, // prune expired rows every hour
+});
 
-if (isProd && !sessionStore) {
-  logger.warn("DATABASE_URL not set — sessions will use MemoryStore and be lost on restart");
-}
+logger.info("Session store: PostgreSQL (connect-pg-simple)");
 
 app.use(
   session({
