@@ -101,6 +101,7 @@
   .ticker-inner{
     white-space:nowrap;display:inline-block;
     animation:tickerRight 22s linear infinite;
+    will-change:transform;
   }
   @keyframes tickerRight{
     from{transform:translateX(-50%);}
@@ -295,7 +296,7 @@
     mask-image:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
     -webkit-mask-image:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   }
-  .marquee-track{display:flex;gap:1rem;width:max-content;animation:scroll 26s linear infinite;}
+  .marquee-track{display:flex;gap:1rem;width:max-content;animation:scroll 26s linear infinite;will-change:transform;}
   @keyframes scroll{from{transform:translateX(-50%);}to{transform:translateX(0%);}}
   .marquee:hover .marquee-track{animation-play-state:paused;}
   .chip{
@@ -571,10 +572,11 @@
   }
   .snowflake{
     position:fixed;top:-20px;z-index:1;pointer-events:none;user-select:none;
-    color:rgba(255,255,255,.85);font-size:var(--sz,1rem);
+    color:rgba(255,255,255,.75);font-size:var(--sz,1rem);
     animation:snowfall var(--dur,8s) linear infinite;
     animation-delay:var(--delay,0s);
-    filter:drop-shadow(0 0 3px rgba(160,220,255,.8));
+    will-change:transform;
+    contain:layout style;
   }
 
   /* ── Ice crystal shimmer ── */
@@ -589,6 +591,7 @@
   .ice-crystal-deco{
     position:absolute;pointer-events:none;
     animation:floatCrystal 7s ease-in-out infinite;
+    will-change:transform;
   }
 
   /* ── Hero: dark ice ── */
@@ -1070,7 +1073,7 @@
   (function(){
     if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const chars = ['❄','❅','❆','⚡','⚡','⚡','❄','❅','⚡','❄'];
-    const count = 28;
+    const count = 14;
     for(let i=0;i<count;i++){
       const el = document.createElement('span');
       el.className = 'snowflake';
