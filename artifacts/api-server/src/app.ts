@@ -1,15 +1,93 @@
 import express, { type Express } from "express";
 import cors from "cors";
-import session from "express-session";
-import ConnectPgSimple from "connect-pg-simple";
+import session, { Store } from "express-session";
 import pinoHttp from "pino-http";
 import { existsSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { eq, lt } from "drizzle-orm";
 import router from "./routes";
 import { logger } from "./lib/logger";
-import { pool } from "@workspace/db";
+import { db, sessionsTable } from "@workspace/db";
 
+// ── Drizzle session store ─────────────────────────────────────────────────────
+// Uses the same Drizzle db instance that's already working with Neon — no
+// separate pg.Pool, no connect-pg-simple, no extra SSL configuration needed.
+// The "session" table is created by drizzle-kit push which runs on every boot.
+class DrizzleStore extends Store {
+  // Prune expired rows once per hour
+  constructor() {
+    super();
+    setInterval(async () => {
+      try {
+        await db.delete(sessionsTable).where(lt(sessionsTable.expire, new Date()));
+      } catch (err) {
+        logger.warn({ err }, "Session prune failed (non-fatal)");
+      }
+    }, 60 * 60 * 1000).unref();
+  }
+
+  get(sid: string, cb: (err: any, session?: any) => void): void {
+    db.select()
+      .from(sessionsTable)
+      .where(eq(sessionsTable.sid, sid))
+      .then(([row]) => {
+        if (!row || row.expire < new Date()) return cb(null, null);
+        cb(null, row.sess);
+      })
+      .catch((err) => {
+        logger.error({ err, sid }, "Session GET error");
+        cb(err);
+      });
+  }
+
+  set(sid: string, session: any, cb?: (err?: any) => void): void {
+    const expire =
+      session.cookie?.expires instanceof Date
+        ? session.cookie.expires
+        : new Date(Date.now() + (session.cookie?.maxAge ?? 7 * 24 * 60 * 60 * 1000));
+
+    db.insert(sessionsTable)
+      .values({ sid, sess: session, expire })
+      .onConflictDoUpdate({
+        target: sessionsTable.sid,
+        set: { sess: session, expire },
+      })
+      .then(() => cb?.())
+      .catch((err) => {
+        logger.error({ err, sid }, "Session SET error");
+        cb?.(err);
+      });
+  }
+
+  destroy(sid: string, cb?: (err?: any) => void): void {
+    db.delete(sessionsTable)
+      .where(eq(sessionsTable.sid, sid))
+      .then(() => cb?.())
+      .catch((err) => {
+        logger.error({ err, sid }, "Session DESTROY error");
+        cb?.(err);
+      });
+  }
+
+  touch(sid: string, session: any, cb?: (err?: any) => void): void {
+    const expire =
+      session.cookie?.expires instanceof Date
+        ? session.cookie.expires
+        : new Date(Date.now() + (session.cookie?.maxAge ?? 7 * 24 * 60 * 60 * 1000));
+
+    db.update(sessionsTable)
+      .set({ expire })
+      .where(eq(sessionsTable.sid, sid))
+      .then(() => cb?.())
+      .catch((err) => {
+        logger.warn({ err, sid }, "Session TOUCH error (non-fatal)");
+        cb?.();          // don't propagate touch errors — they're non-fatal
+      });
+  }
+}
+
+// ── App setup ─────────────────────────────────────────────────────────────────
 const app: Express = express();
 
 app.use(
@@ -33,51 +111,30 @@ app.use(
 );
 
 app.use(cors({ origin: true, credentials: true }));
-// 10 MB limit — needed because product images are sent as base64 data-URLs
-// inside the JSON body (a 800px JPEG at 0.8q is ~150–400 KB base64).
-// The default 100 KB limit causes Express to reject those requests with 413
-// before the route handler runs, which produces a silent failure.
+// 10 MB limit — product images are sent as base64 data-URLs inside the JSON
+// body (a 800px JPEG at 0.8q is ~150–400 KB base64). Default 100 KB limit
+// causes Express to reject those requests silently with 413.
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
 const isProd = process.env["NODE_ENV"] === "production";
 
-// Trust Back4App / Northflank / Render / any reverse-proxy one hop away so that:
-//  - req.secure is true (needed for Secure cookies over HTTPS)
-//  - req.ip reflects the real client IP, not the proxy IP
+// Trust Back4App's reverse proxy so req.secure reflects HTTPS correctly
 if (isProd) {
   app.set("trust proxy", 1);
 }
 
-// ── Session store ─────────────────────────────────────────────────────────────
-// Use PostgreSQL to persist sessions so they survive container restarts.
-// Falls back to MemoryStore only when DATABASE_URL is not set (local dev without DB).
-const PgSession = ConnectPgSimple(session);
-
-// Re-use the already-configured pg.Pool from @workspace/db.
-// That pool already has rejectUnauthorized:false for Neon SSL — no need to
-// duplicate the config here. Passing pool= directly avoids the bug where
-// connect-pg-simple's internal pool ignores SSL and silently falls back to
-// MemoryStore when the Neon TLS handshake fails.
-const sessionStore = new PgSession({
-  pool,
-  createTableIfMissing: true,   // creates "session" table on first boot
-  pruneSessionInterval: 60 * 60, // prune expired rows every hour
-});
-
-logger.info("Session store: PostgreSQL (connect-pg-simple)");
-
 app.use(
   session({
-    store: sessionStore,
+    store: new DrizzleStore(),
     secret: process.env["SESSION_SECRET"] || "fallback-dev-secret",
     resave: false,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      // In production, trust the X-Forwarded-Proto header set by the reverse proxy.
-      // "auto" means: secure if req.secure is true (which trust-proxy makes true over HTTPS).
-      // This avoids the bug where secure:true + HTTP access = browser never sends the cookie.
+      // "auto" honours X-Forwarded-Proto from the reverse proxy (trust proxy:1
+      // already set above). Avoids the bug where secure:true + HTTP = browser
+      // never sends the cookie back.
       secure: isProd ? "auto" : false,
       maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: "lax",
@@ -85,19 +142,16 @@ app.use(
   }),
 );
 
+logger.info("Session store: Drizzle/PostgreSQL");
+
 app.use("/api", router);
 
 // ── Serve built frontend in production ────────────────────────────────────────
-// In development Vite's dev server handles the frontend.
-// On Render the frontend is pre-built; the API server serves it directly.
 if (isProd) {
   const currentDir = dirname(fileURLToPath(import.meta.url));
-  // After esbuild: currentDir = artifacts/api-server/dist/
-  // Frontend build:             artifacts/icebath-iraq/dist/public/
   const staticPath = resolve(currentDir, "../../icebath-iraq/dist/public");
   if (existsSync(staticPath)) {
     app.use(express.static(staticPath));
-    // Any non-API route falls through to index.html
     app.use((_req, res) => {
       res.sendFile(resolve(staticPath, "index.html"));
     });
