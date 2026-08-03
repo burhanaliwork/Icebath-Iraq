@@ -64,7 +64,7 @@ if (isProd) {
   if (existsSync(staticPath)) {
     app.use(express.static(staticPath));
     // Any non-API route falls through to index.html
-    app.get("*", (_req, res) => {
+    app.use((_req, res) => {
       res.sendFile(resolve(staticPath, "index.html"));
     });
     logger.info({ staticPath }, "Serving static frontend");
