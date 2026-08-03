@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
-import { productsTable, ordersTable, orderItemsTable, adminUsersTable } from "@workspace/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { productsTable, ordersTable, orderItemsTable, adminUsersTable, productAddonsTable } from "@workspace/db/schema";
+import { eq, desc, asc } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { requireAdmin } from "../middlewares/auth";
 import { logger } from "../lib/logger";
@@ -42,7 +42,13 @@ router.get("/admin/me", (req, res) => {
 router.get("/admin/products", requireAdmin, async (_req, res) => {
   try {
     const products = await db.select().from(productsTable).orderBy(desc(productsTable.createdAt));
-    res.json(products);
+    const addons = await db.select().from(productAddonsTable).orderBy(asc(productAddonsTable.sortOrder));
+    const addonMap: Record<number, any[]> = {};
+    for (const a of addons) {
+      if (!addonMap[a.productId]) addonMap[a.productId] = [];
+      addonMap[a.productId].push(a);
+    }
+    res.json(products.map(p => ({ ...p, addons: addonMap[p.id] ?? [] })));
   } catch (err) {
     logger.error({ err }, "Failed to fetch products");
     res.status(500).json({ error: "Failed to fetch products" });
@@ -85,6 +91,29 @@ router.put("/admin/products/:id", requireAdmin, async (req, res) => {
   }
 });
 
+// Replace all add-ons for a product (max 5)
+router.put("/admin/products/:id/addons", requireAdmin, async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const { addons } = req.body; // [{ name, price }]
+    await db.delete(productAddonsTable).where(eq(productAddonsTable.productId, id));
+    if (Array.isArray(addons) && addons.length > 0) {
+      const rows = addons.slice(0, 5).map((a: any, i: number) => ({
+        productId: id,
+        name: String(a.name || "").trim(),
+        price: parseInt(a.price) || 0,
+        sortOrder: i,
+      })).filter(a => a.name);
+      if (rows.length) await db.insert(productAddonsTable).values(rows);
+    }
+    logger.info({ productId: id, count: addons?.length ?? 0 }, "Addons updated");
+    res.json({ ok: true });
+  } catch (err) {
+    logger.error({ err }, "Failed to update addons");
+    res.status(400).json({ error: "Failed to update addons", detail: String(err) });
+  }
+});
+
 router.patch("/admin/products/:id/stock", requireAdmin, async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -100,7 +129,9 @@ router.patch("/admin/products/:id/stock", requireAdmin, async (req, res) => {
 
 router.delete("/admin/products/:id", requireAdmin, async (req, res) => {
   try {
-    await db.delete(productsTable).where(eq(productsTable.id, parseInt(req.params.id)));
+    const id = parseInt(req.params.id);
+    await db.delete(productAddonsTable).where(eq(productAddonsTable.productId, id));
+    await db.delete(productsTable).where(eq(productsTable.id, id));
     res.json({ ok: true });
   } catch (err) {
     logger.error({ err }, "Failed to delete product");

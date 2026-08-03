@@ -143,16 +143,36 @@
   .menu-toggle span{display:block;height:2.5px;width:100%;background:#fff;border-radius:2px;transition:transform .35s var(--ease), opacity .35s var(--ease);}
 
   @media (max-width:880px){
-    nav{position:fixed;inset:0;top:0;background:var(--white);display:flex;align-items:center;justify-content:center;
-      opacity:0;pointer-events:none;transition:opacity .4s var(--ease);}
+    nav{
+      position:fixed;inset:0;top:0;
+      background:#030914;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;
+      opacity:0;pointer-events:none;
+      transition:opacity .35s var(--ease);
+      z-index:9000;
+    }
     nav.open{opacity:1;pointer-events:auto;}
-    nav ul{flex-direction:column;text-align:center;gap:2rem;font-size:1.4rem;}
+    nav ul{flex-direction:column;text-align:center;gap:2.5rem;font-size:1.5rem;}
     .nav-cta .btn-ghost{display:none;}
-    .menu-toggle{display:flex;z-index:200;}
+    /* hamburger sits above nav overlay */
+    .menu-toggle{display:flex;z-index:9100;position:relative;}
     .menu-toggle.open span:nth-child(1){transform:translateY(8.5px) rotate(45deg);}
     .menu-toggle.open span:nth-child(2){opacity:0;}
     .menu-toggle.open span:nth-child(3){transform:translateY(-8.5px) rotate(-45deg);}
+    body.menu-open{overflow:hidden;}
+    /* ✕ close button inside nav */
+    .nav-close-btn{display:flex;}
   }
+  .nav-close-btn{
+    display:none;
+    position:absolute;top:1.2rem;left:1.2rem;
+    width:46px;height:46px;border-radius:50%;
+    background:rgba(127,214,255,.12);border:1.5px solid rgba(127,214,255,.3);
+    color:#7fd6ff;font-size:1.4rem;align-items:center;justify-content:center;
+    cursor:pointer;z-index:9100;
+    transition:background .2s;
+  }
+  .nav-close-btn:hover{background:rgba(127,214,255,.25);}
 
   /* ---------- hero ---------- */
   .hero{
@@ -764,16 +784,128 @@
   }
   .product-card:hover::after{ opacity:1; }
 
-  /* mobile nav full-screen overlay — always dark, always on top */
+  /* mobile nav: nav links are always white inside dark overlay */
   @media (max-width:880px){
-    nav.open{
-      background:rgba(3,9,20,.97) !important;
-      backdrop-filter:blur(0px);
-      z-index:500 !important;
-    }
-    nav.open a{ color:#e8f6ff !important; }
+    nav a{ color:#e8f6ff !important; }
+    nav a:hover{ color:#7fd6ff !important; }
   }
   /* ═══════════════ END ICE THEME ═══════════════ */
+
+  /* ── Lightning bolts around gauge ──────────────────────────────── */
+  @keyframes boltFlash{
+    0%,100%{ opacity:0; }
+    2%     { opacity:1; }
+    5%     { opacity:.15; }
+    7%     { opacity:.95; }
+    11%    { opacity:0; }
+    47%    { opacity:0; }
+    49%    { opacity:.85; }
+    52%    { opacity:0; }
+    55%    { opacity:.5; }
+    58%    { opacity:0; }
+  }
+  .gauge-lightning{
+    position:absolute;inset:-38px;pointer-events:none;z-index:3;
+  }
+  .gbolt{
+    position:absolute;
+    filter:drop-shadow(0 0 5px #7fd6ff) drop-shadow(0 0 14px #3bbfff);
+    animation:boltFlash var(--flash-dur,2.8s) var(--flash-delay,0s) infinite;
+    opacity:0;
+  }
+
+  /* ── Product detail full-screen overlay ─────────────────────────── */
+  .detail-overlay{
+    position:fixed;inset:0;z-index:800;
+    background:linear-gradient(160deg,#030f1c 0%,#071e38 40%,#0b3060 100%);
+    transform:translateX(100%);
+    transition:transform .45s cubic-bezier(.34,1.15,.64,1);
+    overflow-y:auto;overscroll-behavior:contain;
+  }
+  .detail-overlay.open{ transform:translateX(0); }
+  .detail-header{
+    position:sticky;top:0;z-index:2;
+    background:rgba(3,15,28,.92);backdrop-filter:blur(14px);
+    padding:.85rem 1.2rem;display:flex;align-items:center;gap:.8rem;
+    border-bottom:1px solid rgba(127,214,255,.15);
+  }
+  .detail-back{
+    display:inline-flex;align-items:center;gap:.4rem;flex-shrink:0;
+    background:rgba(127,214,255,.1);border:1.5px solid rgba(127,214,255,.3);
+    color:#7fd6ff;padding:.45rem 1rem;border-radius:100px;
+    font-weight:700;font-size:.9rem;cursor:pointer;
+    transition:background .2s,color .2s;font-family:'Tajawal',sans-serif;
+  }
+  .detail-back:hover{background:rgba(127,214,255,.22);color:#c8ecff;}
+  .detail-header-title{
+    font-family:'Tajawal',sans-serif;font-weight:800;font-size:1.05rem;color:#e8f6ff;
+    overflow:hidden;white-space:nowrap;text-overflow:ellipsis;flex:1;
+  }
+  .detail-body{ max-width:700px;margin:0 auto;padding:1.5rem 1.2rem 5rem; }
+  .detail-hero-img{
+    width:100%;border-radius:20px;object-fit:cover;max-height:420px;
+    cursor:zoom-in;transition:transform .3s;display:block;
+    box-shadow:0 20px 50px rgba(0,0,0,.5);
+  }
+  .detail-hero-img:hover{transform:scale(1.01);}
+  .detail-img-placeholder{
+    width:100%;height:280px;border-radius:20px;
+    background:linear-gradient(160deg,#071e38,#0b3060);
+    display:flex;align-items:center;justify-content:center;
+    font-size:5rem;color:rgba(127,214,255,.3);
+  }
+  .detail-name{
+    font-family:'Tajawal',sans-serif;font-weight:900;font-size:1.9rem;
+    color:#e8f6ff;margin:1.3rem 0 .6rem;
+  }
+  .detail-desc{color:rgba(180,220,255,.78);font-size:1rem;line-height:1.8;margin-bottom:1.1rem;}
+  .detail-price-row{
+    display:flex;align-items:baseline;gap:.5rem;margin-bottom:1.5rem;
+    flex-wrap:wrap;
+  }
+  .detail-base-price{
+    font-family:'Tajawal',sans-serif;font-weight:900;font-size:1.8rem;color:#3bbfff;
+  }
+  .detail-price-label{font-size:.9rem;color:rgba(160,220,255,.6);}
+  .detail-addons{
+    background:rgba(255,255,255,.05);border:1px solid rgba(127,214,255,.2);
+    border-radius:18px;padding:1.2rem 1.5rem;margin-bottom:1.8rem;
+  }
+  .detail-addons-title{
+    font-family:'Tajawal',sans-serif;font-weight:800;font-size:1rem;
+    color:#7fd6ff;margin-bottom:1rem;
+  }
+  .addon-check-row{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:.65rem 0;border-bottom:1px solid rgba(127,214,255,.08);gap:.8rem;
+  }
+  .addon-check-row:last-child{border-bottom:none;}
+  .addon-check-left{display:flex;align-items:center;gap:.7rem;cursor:pointer;flex:1;}
+  .addon-check-left input[type="checkbox"]{
+    width:18px;height:18px;accent-color:#3bbfff;flex-shrink:0;cursor:pointer;
+  }
+  .addon-check-name{color:#c8ecff;font-size:.95rem;font-weight:600;}
+  .addon-check-price{color:#3bbfff;font-family:'Tajawal',sans-serif;font-weight:800;font-size:.9rem;white-space:nowrap;}
+  .detail-out-of-stock{
+    display:inline-block;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);
+    color:#f87171;padding:.5rem 1.2rem;border-radius:100px;font-weight:700;font-size:.9rem;margin-bottom:1.5rem;
+  }
+  .detail-add-btn{
+    width:100%;padding:1.1rem;font-size:1.1rem;border-radius:16px;
+    background:linear-gradient(135deg,#2fa3ec,#1260b0) !important;
+    box-shadow:0 8px 30px rgba(28,134,208,.5) !important;
+  }
+  .detail-add-btn:hover{
+    box-shadow:0 0 40px rgba(127,214,255,.5),0 20px 50px rgba(28,134,208,.5) !important;
+  }
+  /* ── Simplified product card (detail-driven) ─────────────────────── */
+  .product-card .product-info{
+    text-align:center;
+    padding:1.2rem 1.4rem 1.6rem !important;
+  }
+  .product-card .product-info h3{
+    margin-bottom:1rem;
+  }
 
 </style>
 </head>
@@ -791,6 +923,8 @@
     <a href="#top" class="brand-inline">ICEBATH.IRAQ</a>
     <!-- Desktop nav links (RTL: center) -->
     <nav id="siteNav">
+      <!-- Mobile ✕ close button — inside overlay so always visible -->
+      <button class="nav-close-btn" id="navCloseBtn" aria-label="إغلاق القائمة">✕</button>
       <ul>
         <li><a href="#top" class="nav-link">الرئيسية</a></li>
         <li><a href="#products" class="nav-link">منتجاتنا</a></li>
@@ -871,6 +1005,27 @@
         <span class="ripple r1"></span>
         <span class="ripple r2"></span>
         <span class="ripple r3"></span>
+
+        <!-- Electric / lightning bolts ring -->
+        <div class="gauge-lightning" aria-hidden="true">
+          <!-- Top -->
+          <svg class="gbolt" style="width:16px;top:3%;left:calc(50% - 8px);--flash-dur:2.5s;--flash-delay:0s;" viewBox="0 0 16 44" fill="none"><polyline points="11,0 4,22 9,22 2,44" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <!-- Top-right -->
+          <svg class="gbolt" style="width:14px;top:11%;right:10%;--flash-dur:3.1s;--flash-delay:.38s;transform:rotate(45deg);" viewBox="0 0 16 44" fill="none"><polyline points="11,0 4,22 9,22 2,44" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <!-- Right -->
+          <svg class="gbolt" style="width:14px;top:calc(50% - 22px);right:0%;--flash-dur:2.7s;--flash-delay:.76s;transform:rotate(90deg);" viewBox="0 0 16 44" fill="none"><polyline points="11,0 4,22 9,22 2,44" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <!-- Bottom-right -->
+          <svg class="gbolt" style="width:14px;bottom:11%;right:10%;--flash-dur:3.4s;--flash-delay:1.14s;transform:rotate(135deg);" viewBox="0 0 16 44" fill="none"><polyline points="11,0 4,22 9,22 2,44" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <!-- Bottom -->
+          <svg class="gbolt" style="width:16px;bottom:3%;left:calc(50% - 8px);--flash-dur:2.9s;--flash-delay:1.5s;transform:rotate(180deg);" viewBox="0 0 16 44" fill="none"><polyline points="11,0 4,22 9,22 2,44" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <!-- Bottom-left -->
+          <svg class="gbolt" style="width:14px;bottom:11%;left:10%;--flash-dur:3.2s;--flash-delay:1.88s;transform:rotate(225deg);" viewBox="0 0 16 44" fill="none"><polyline points="11,0 4,22 9,22 2,44" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <!-- Left -->
+          <svg class="gbolt" style="width:14px;top:calc(50% - 22px);left:0%;--flash-dur:2.6s;--flash-delay:2.26s;transform:rotate(270deg);" viewBox="0 0 16 44" fill="none"><polyline points="11,0 4,22 9,22 2,44" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <!-- Top-left -->
+          <svg class="gbolt" style="width:14px;top:11%;left:10%;--flash-dur:3.0s;--flash-delay:2.64s;transform:rotate(315deg);" viewBox="0 0 16 44" fill="none"><polyline points="11,0 4,22 9,22 2,44" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+
         <div class="gauge" id="gauge">
           <div class="gauge-inner">
             <div class="gauge-temp" id="gaugeTemp">37</div>
@@ -968,18 +1123,25 @@
     header.classList.toggle('scrolled', window.scrollY > 30);
   }, { passive:true });
 
-  // mobile menu
+  // mobile menu — solid dark overlay, scroll lock, ✕ inside nav
   const menuToggle = document.getElementById('menuToggle');
-  const siteNav = document.getElementById('siteNav');
-  menuToggle.addEventListener('click', () => {
-    menuToggle.classList.toggle('open');
-    siteNav.classList.toggle('open');
-  });
+  const siteNav    = document.getElementById('siteNav');
+  function openNav() {
+    menuToggle.classList.add('open');
+    siteNav.classList.add('open');
+    document.body.classList.add('menu-open');
+  }
+  function closeNav() {
+    menuToggle.classList.remove('open');
+    siteNav.classList.remove('open');
+    document.body.classList.remove('menu-open');
+  }
+  menuToggle.addEventListener('click', () =>
+    menuToggle.classList.contains('open') ? closeNav() : openNav()
+  );
+  document.getElementById('navCloseBtn').addEventListener('click', closeNav);
   document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', () => {
-      menuToggle.classList.remove('open');
-      siteNav.classList.remove('open');
-    });
+    link.addEventListener('click', closeNav);
   });
 
   // scroll reveal
@@ -1008,17 +1170,17 @@
   function runGauge() {
     if (gaugeStarted || reduceMotion) {
       if (reduceMotion) {
-        gaugeTemp.textContent = '10';
+        gaugeTemp.textContent = '5';
         gaugeTemp.classList.add('cold');
         gaugeLabel.textContent = 'جاهز للانغماس البارد';
-        gauge.style.setProperty('--sweep', '336deg');
+        gauge.style.setProperty('--sweep', '348deg');
       }
       return;
     }
     gaugeStarted = true;
     ripples.forEach(r => r.classList.add('animate'));
 
-    const from = 37, to = 10, duration = 2600, start = performance.now();
+    const from = 37, to = 5, duration = 2900, start = performance.now();
     function frame(now){
       const p = Math.min((now - start) / duration, 1);
       const eased = 1 - Math.pow(1 - p, 3);
@@ -1100,6 +1262,17 @@
   <img id="lightboxImg" src="" alt="">
 </div>
 
+<!-- PRODUCT DETAIL PAGE -->
+<div class="detail-overlay" id="detailOverlay" role="dialog" aria-modal="true" aria-label="تفاصيل المنتج">
+  <div class="detail-header">
+    <button class="detail-back" onclick="closeDetail()">← رجوع</button>
+    <div class="detail-header-title" id="detailHeaderTitle"></div>
+  </div>
+  <div class="detail-body">
+    <div id="detailContent"></div>
+  </div>
+</div>
+
 <!-- MUSIC -->
 <audio id="bgMusic" src="/music.mp3" loop preload="none"></audio>
 <button id="musicBtn" aria-label="تشغيل / إيقاف الموسيقى" title="موسيقى">🎵</button>
@@ -1177,35 +1350,15 @@ async function loadProducts() {
       <div class="product-card reveal" data-id="${p.id}">
         <div class="product-visual product-img-wrap" style="background:#0b1f3a;">
           ${p.imageUrl
-            ? `<img src="${p.imageUrl}" alt="${p.name}" class="product-real-img" loading="lazy">`
+            ? `<img src="${escHtml(p.imageUrl)}" alt="${escHtml(p.name)}" class="product-real-img" loading="lazy">`
             : `<div class="product-img-placeholder">❄</div>`}
         </div>
         <div class="product-info">
-          <h3>${p.name}</h3>
-          <p>${p.description || ''}</p>
-          <div class="product-price">${Number(p.price).toLocaleString()} <span>دينار عراقي</span></div>
-          ${p.inStock
-            ? `<button class="btn btn-primary add-to-cart" data-id="${p.id}" data-product="${p.name}" data-price="${p.price}">أضف للسلة 🛒</button>`
-            : `<button class="btn btn-primary" disabled style="opacity:.5;cursor:not-allowed;">❌ نفذت الكمية</button>`}
+          <h3>${escHtml(p.name)}</h3>
+          <button class="btn btn-primary" onclick="openDetail(${p.id})" style="width:100%;margin-top:.4rem;">عرض التفاصيل</button>
         </div>
       </div>
     `).join('');
-
-    // Attach cart listeners
-    grid.querySelectorAll('.add-to-cart').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const pName  = btn.dataset.product;
-        const pPrice = Number(btn.dataset.price) || PRICE;
-        cart[pName] = (cart[pName] || 0) + 1;
-        cartPrices[pName] = pPrice;
-        btn.classList.remove('cart-pulse');
-        void btn.offsetWidth;
-        btn.classList.add('cart-pulse');
-        btn.addEventListener('animationend', () => btn.classList.remove('cart-pulse'), { once: true });
-        openCart();
-        renderCart();
-      });
-    });
 
     // Reveal animations
     if (window.IntersectionObserver) {
@@ -1267,7 +1420,7 @@ function renderCart() {
           <span class="qty-num">${qty}</span>
           <button class="qty-btn" onclick="changeQty('${name}',1)">+</button>
         </div>
-        <div class="cart-item-price">${formatPrice(qty * PRICE)}</div>
+        <div class="cart-item-price">${formatPrice(qty * (cartPrices[name] || PRICE))}</div>
       </div>`
     ).join('');
     totalEl.textContent = formatPrice(getTotal());
@@ -1421,6 +1574,119 @@ musicBtn.addEventListener('click', () => {
 ['scroll','click','keydown','touchstart'].forEach(ev => {
   window.addEventListener(ev, startMusic, { once: true, passive: true });
 });
+</script>
+
+<script>
+// ─── Product detail page ────────────────────────────
+function escHtml(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+let _detailScrollY = 0;
+
+async function openDetail(productId) {
+  const overlay = document.getElementById('detailOverlay');
+  const content = document.getElementById('detailContent');
+  const title   = document.getElementById('detailHeaderTitle');
+
+  // Save current scroll position so "رجوع" brings back to same spot
+  _detailScrollY = window.scrollY;
+
+  // Loading state
+  content.innerHTML = '<div style="text-align:center;padding:5rem 1rem;color:rgba(160,220,255,.7);"><span style="font-size:3rem;">❄️</span><p style="margin-top:1rem;font-size:1.1rem;">جاري التحميل...</p></div>';
+  title.textContent = '';
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  try {
+    const r = await fetch('/api/products/' + productId);
+    if (!r.ok) throw new Error('not found');
+    const p = await r.json();
+
+    title.textContent = p.name;
+
+    // Build add-ons HTML
+    const addonsHtml = p.addons?.length
+      ? `<div class="detail-addons">
+           <div class="detail-addons-title">🛒 إضافات اختيارية</div>
+           ${p.addons.map(a => `
+             <div class="addon-check-row">
+               <label class="addon-check-left">
+                 <input type="checkbox" class="addon-cb" data-price="${a.price}"
+                   onchange="updateDetailPrice(${p.price})">
+                 <span class="addon-check-name">${escHtml(a.name)}</span>
+               </label>
+               <span class="addon-check-price">+${Number(a.price).toLocaleString()} د.ع</span>
+             </div>
+           `).join('')}
+         </div>`
+      : '';
+
+    content.innerHTML = `
+      ${p.imageUrl
+        ? `<img src="${escHtml(p.imageUrl)}" alt="${escHtml(p.name)}" class="detail-hero-img" id="detailHeroImg">`
+        : `<div class="detail-img-placeholder">❄</div>`}
+      <div class="detail-name">${escHtml(p.name)}</div>
+      ${p.description ? `<div class="detail-desc">${escHtml(p.description)}</div>` : ''}
+      <div class="detail-price-row">
+        <span class="detail-base-price" id="detailPriceEl">${Number(p.price).toLocaleString()}</span>
+        <span class="detail-price-label">دينار عراقي</span>
+      </div>
+      ${addonsHtml}
+      ${p.inStock
+        ? `<button class="btn detail-add-btn"
+             onclick="addDetailToCart(${p.id},'${escHtml(p.name).replace(/'/g,"\\'")}',${p.price})">
+             إضافة إلى السلة 🛒
+           </button>`
+        : `<div class="detail-out-of-stock">❌ نفذت الكمية</div>`}
+    `;
+
+    // Lightbox on detail image tap
+    const heroImg = document.getElementById('detailHeroImg');
+    if (heroImg) heroImg.addEventListener('click', () => openLightbox(heroImg.src, heroImg.alt));
+
+  } catch {
+    content.innerHTML = '<div style="text-align:center;padding:3rem;color:rgba(255,100,100,.8);">تعذر تحميل المنتج</div>';
+  }
+}
+
+function closeDetail() {
+  const overlay = document.getElementById('detailOverlay');
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+  // Restore scroll position to where user was in the products section
+  setTimeout(() => window.scrollTo({ top: _detailScrollY, behavior: 'instant' }), 30);
+}
+
+// Handle browser back gesture on detail overlay
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('detailOverlay').classList.contains('open')) {
+    closeDetail();
+  }
+});
+
+function updateDetailPrice(basePrice) {
+  const extra = [...document.querySelectorAll('.addon-cb:checked')]
+    .reduce((s, cb) => s + (parseInt(cb.dataset.price) || 0), 0);
+  const el = document.getElementById('detailPriceEl');
+  if (el) el.textContent = (basePrice + extra).toLocaleString();
+}
+
+function addDetailToCart(id, name, basePrice) {
+  const checked   = [...document.querySelectorAll('.addon-cb:checked')];
+  const extra     = checked.reduce((s, cb) => s + (parseInt(cb.dataset.price) || 0), 0);
+  const totalPrice = basePrice + extra;
+  const addonNames = checked.map(cb =>
+    cb.closest('.addon-check-left').querySelector('.addon-check-name').textContent
+  );
+  const displayName = addonNames.length ? `${name} (${addonNames.join('، ')})` : name;
+
+  cart[displayName] = (cart[displayName] || 0) + 1;
+  cartPrices[displayName] = totalPrice;
+
+  closeDetail();
+  setTimeout(() => { openCart(); renderCart(); }, 350);
+}
 </script>
 
 </body>

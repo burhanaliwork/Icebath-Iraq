@@ -97,6 +97,27 @@
     background:none;color:rgba(160,220,255,.7);font-family:'Tajawal',sans-serif;font-weight:700;font-size:1rem;transition:border-color .2s,color .2s;}
   .btn-reset:hover{border-color:#3bbfff;color:#3bbfff;}
 
+  /* ── Add-ons rows ── */
+  .addons-section-label{font-weight:700;font-size:.88rem;color:rgba(160,220,255,.8);display:block;margin-bottom:.6rem;}
+  .addon-row{display:flex;gap:.55rem;align-items:center;margin-bottom:.45rem;}
+  .addon-row input{padding:.65rem .9rem;background:rgba(255,255,255,.07);
+    border:1.5px solid rgba(59,191,255,.22);border-radius:10px;
+    color:#fff;font-size:.9rem;outline:none;direction:rtl;transition:border-color .25s;}
+  .addon-row input:focus{border-color:#3bbfff;}
+  .addon-name-input{flex:1;}
+  .addon-price-input{flex:0 0 110px;direction:ltr !important;text-align:left;}
+  .addon-row-remove{width:30px;height:30px;border-radius:50%;flex-shrink:0;
+    background:rgba(255,100,100,.12);border:1px solid rgba(255,100,100,.28);
+    color:#ff7b7b;font-size:1rem;display:flex;align-items:center;justify-content:center;
+    cursor:pointer;transition:background .2s;}
+  .addon-row-remove:hover{background:rgba(255,100,100,.28);}
+  .add-addon-btn{width:100%;padding:.55rem 1rem;margin-top:.3rem;
+    border:1.5px dashed rgba(59,191,255,.3);border-radius:10px;
+    background:none;color:rgba(160,220,255,.55);font-family:inherit;font-size:.88rem;font-weight:600;
+    cursor:pointer;transition:border-color .2s,color .2s;}
+  .add-addon-btn:hover{border-color:#3bbfff;color:#3bbfff;}
+  .addons-hint{font-size:.78rem;color:rgba(160,220,255,.4);margin-top:.3rem;}
+
   /* ── Products list ── */
   .products-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.2rem;}
   .prod-item{background:rgba(255,255,255,.05);border:1px solid rgba(59,191,255,.18);
@@ -239,6 +260,14 @@
             <button type="button" class="toggle-switch on" id="stockToggle" onclick="toggleFormStock()"></button>
             <span class="toggle-label" id="stockLabel">متوفر في المخزون</span>
           </div>
+        </div>
+
+        <!-- Optional add-ons per product -->
+        <div class="field field-full">
+          <span class="addons-section-label">الإضافات الاختيارية للمنتج</span>
+          <div id="addonsContainer"></div>
+          <button type="button" class="add-addon-btn" id="addAddonBtn" onclick="addAddonRow()">+ إضافة خيار اختياري</button>
+          <p class="addons-hint">حتى 5 إضافات — كل إضافة لها اسم وسعر إضافي. تظهر للعميل كـ ✓ في صفحة المنتج.</p>
         </div>
       </div>
       <div class="form-actions">
@@ -436,6 +465,35 @@ function toggleFormStock() {
   lbl.textContent = formStockVal ? 'متوفر في المخزون' : 'غير متوفر';
 }
 
+// ─── Add-ons management ──────────────────────────────
+let addonRowCount = 0;
+
+function addAddonRow(name = '', price = '') {
+  const container = document.getElementById('addonsContainer');
+  if (container.children.length >= 5) { showToast('⚠️ الحد الأقصى 5 إضافات'); return; }
+  const rowId = ++addonRowCount;
+  const div = document.createElement('div');
+  div.className = 'addon-row';
+  div.id = 'addon-row-' + rowId;
+  div.innerHTML = `
+    <input type="text" class="addon-name-input" placeholder="اسم الإضافة (مثال: ثلج إضافي)" value="${String(name).replace(/"/g,'&quot;')}">
+    <input type="number" class="addon-price-input" placeholder="السعر" value="${price || ''}" min="0">
+    <button type="button" class="addon-row-remove" onclick="document.getElementById('addon-row-${rowId}').remove()">×</button>
+  `;
+  container.appendChild(div);
+}
+
+function getAddonsFromForm() {
+  return [...document.querySelectorAll('.addon-row')].map(row => ({
+    name: row.querySelector('.addon-name-input').value.trim(),
+    price: parseInt(row.querySelector('.addon-price-input').value) || 0,
+  })).filter(a => a.name);
+}
+
+function clearAddons() {
+  document.getElementById('addonsContainer').innerHTML = '';
+}
+
 function resetForm() {
   document.getElementById('editId').value = '';
   document.getElementById('pName').value = '';
@@ -447,6 +505,7 @@ function resetForm() {
   document.getElementById('stockLabel').textContent = 'متوفر في المخزون';
   document.getElementById('formTitle').textContent = '➕ أضف منتج جديد';
   document.getElementById('addBtn').textContent = 'حفظ المنتج ✅';
+  clearAddons();
 }
 document.getElementById('resetBtn').addEventListener('click', resetForm);
 
@@ -468,6 +527,16 @@ async function saveProduct() {
   try {
     const r = await fetch(url, { method, headers: {'Content-Type':'application/json'}, credentials:'include', body: JSON.stringify(body) });
     if (r.ok) {
+      const savedProduct = await r.json().catch(() => ({ id: editId ? parseInt(editId) : null }));
+      const productId = savedProduct.id || (editId ? parseInt(editId) : null);
+      // Save add-ons (replace all)
+      if (productId) {
+        const addons = getAddonsFromForm();
+        await fetch(`${API}/api/admin/products/${productId}/addons`, {
+          method: 'PUT', headers: {'Content-Type':'application/json'},
+          credentials: 'include', body: JSON.stringify({ addons }),
+        }).catch(err => console.error('[saveProduct] addons error:', err));
+      }
       showToast(editId ? '✅ تم تعديل المنتج' : '✅ تم حفظ المنتج بنجاح');
       resetForm();
       await loadProducts();
@@ -516,6 +585,11 @@ async function editProduct(id) {
     document.getElementById('stockLabel').textContent = p.inStock ? 'متوفر في المخزون' : 'غير متوفر';
     document.getElementById('formTitle').textContent = '✏️ تعديل المنتج';
     document.getElementById('addBtn').textContent = 'حفظ التعديلات ✅';
+    // Load existing add-ons
+    clearAddons();
+    if (Array.isArray(p.addons) && p.addons.length) {
+      p.addons.forEach(a => addAddonRow(a.name, a.price));
+    }
     document.getElementById('addForm').scrollIntoView({ behavior: 'smooth' });
   } catch { showToast('❌ تعذر تحميل المنتج'); }
 }
