@@ -761,11 +761,12 @@
   }
   .product-card:hover::after{ opacity:1; }
 
-  /* mobile nav dark on hero */
+  /* mobile nav full-screen overlay — always dark, always on top */
   @media (max-width:880px){
     nav.open{
-      background:rgba(4,18,36,.96) !important;
-      backdrop-filter:blur(16px);
+      background:rgba(3,9,20,.97) !important;
+      backdrop-filter:blur(0px);
+      z-index:500 !important;
     }
     nav.open a{ color:#e8f6ff !important; }
   }
@@ -793,13 +794,13 @@
         <li><a href="https://wa.me/9647869349728" target="_blank" rel="noopener" class="nav-link" style="color:#25d366;font-weight:700;">📱 تواصل معنا</a></li>
       </ul>
     </nav>
-    <!-- Icons pushed to visual LEFT in RTL -->
+    <!-- Icons pushed to visual LEFT in RTL: cart (right) then hamburger (left) -->
     <div class="nav-left-icons">
-      <button class="menu-toggle" id="menuToggle" aria-label="فتح القائمة"><span></span><span></span><span></span></button>
       <button class="cart-btn" id="cartOpenBtn" onclick="openCart()" aria-label="السلة">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
         <span class="cart-badge hidden" id="cartBadge">0</span>
       </button>
+      <button class="menu-toggle" id="menuToggle" aria-label="فتح القائمة"><span></span><span></span><span></span></button>
     </div>
   </div>
 </header>
