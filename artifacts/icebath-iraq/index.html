@@ -1153,60 +1153,73 @@
 </div>
 
 <script>
-// ─── Dynamic products from localStorage ────────────────────────
-function loadProducts() {
-  const products = JSON.parse(localStorage.getItem('icebath_products') || '[]');
-  const grid = document.getElementById('dynamicProductsGrid');
+// ─── Dynamic products from API ────────────────────────
+async function loadProducts() {
+  const grid  = document.getElementById('dynamicProductsGrid');
   const noMsg = document.getElementById('noProductsMsg');
   if (!grid) return;
-  if (products.length === 0) {
-    grid.innerHTML = '';
-    noMsg && (noMsg.style.display = 'block');
-    return;
-  }
-  noMsg && (noMsg.style.display = 'none');
-  grid.innerHTML = products.map(p => `
-    <div class="product-card reveal">
-      <div class="product-visual product-img-wrap" style="background:#0b1f3a;">
-        ${p.image ? `<img src="${p.image}" alt="${p.name}" class="product-real-img" loading="lazy" style="height:260px;object-fit:cover;">` : `<div style="display:flex;align-items:center;justify-content:center;height:260px;font-size:4rem;color:rgba(127,214,255,.4);">❄</div>`}
-      </div>
-      <div class="product-info">
-        <h3>${p.name}</h3>
-        <p>${p.description || ''}</p>
-        <div class="product-price">${Number(p.price).toLocaleString()} <span>دينار عراقي</span></div>
-        <button class="btn btn-primary add-to-cart" data-product="${p.name}" data-price="${p.price}">أضف للسلة 🛒</button>
-      </div>
-    </div>
-  `).join('');
 
-  // Re-attach cart listeners for new buttons
-  grid.querySelectorAll('.add-to-cart').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const pName = btn.dataset.product;
-      const pPrice = Number(btn.dataset.price) || PRICE;
-      cart[pName] = (cart[pName] || 0) + 1;
-      cartPrices[pName] = pPrice;
-      btn.classList.remove('cart-pulse');
-      void btn.offsetWidth;
-      btn.classList.add('cart-pulse');
-      btn.addEventListener('animationend', () => btn.classList.remove('cart-pulse'), { once: true });
-      openCart();
-      renderCart();
+  grid.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--slate-light);"><span style="font-size:2rem;">❄️</span><br>جاري التحميل...</div>';
+
+  try {
+    const r = await fetch('/api/products');
+    const products = r.ok ? await r.json() : [];
+
+    if (!products.length) {
+      grid.innerHTML = '';
+      noMsg && (noMsg.style.display = 'block');
+      return;
+    }
+    noMsg && (noMsg.style.display = 'none');
+
+    grid.innerHTML = products.map(p => `
+      <div class="product-card reveal" data-id="${p.id}">
+        <div class="product-visual product-img-wrap" style="background:#0b1f3a;">
+          ${p.imageUrl
+            ? `<img src="${p.imageUrl}" alt="${p.name}" class="product-real-img" loading="lazy" style="height:260px;object-fit:cover;">`
+            : `<div style="display:flex;align-items:center;justify-content:center;height:260px;font-size:4rem;color:rgba(127,214,255,.4);">❄</div>`}
+        </div>
+        <div class="product-info">
+          <h3>${p.name}</h3>
+          <p>${p.description || ''}</p>
+          <div class="product-price">${Number(p.price).toLocaleString()} <span>دينار عراقي</span></div>
+          ${p.inStock
+            ? `<button class="btn btn-primary add-to-cart" data-id="${p.id}" data-product="${p.name}" data-price="${p.price}">أضف للسلة 🛒</button>`
+            : `<button class="btn btn-primary" disabled style="opacity:.5;cursor:not-allowed;">❌ نفذت الكمية</button>`}
+        </div>
+      </div>
+    `).join('');
+
+    // Attach cart listeners
+    grid.querySelectorAll('.add-to-cart').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const pName  = btn.dataset.product;
+        const pPrice = Number(btn.dataset.price) || PRICE;
+        cart[pName] = (cart[pName] || 0) + 1;
+        cartPrices[pName] = pPrice;
+        btn.classList.remove('cart-pulse');
+        void btn.offsetWidth;
+        btn.classList.add('cart-pulse');
+        btn.addEventListener('animationend', () => btn.classList.remove('cart-pulse'), { once: true });
+        openCart();
+        renderCart();
+      });
     });
-  });
 
-  // Trigger reveal animations
-  if (window.IntersectionObserver) {
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
-    }, { threshold: 0.1 });
-    grid.querySelectorAll('.reveal').forEach(el => io.observe(el));
-  } else {
-    grid.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
+    // Reveal animations
+    if (window.IntersectionObserver) {
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+      }, { threshold: 0.1 });
+      grid.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    } else {
+      grid.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
+    }
+  } catch {
+    grid.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--slate-light);">تعذر تحميل المنتجات</div>';
   }
 }
 loadProducts();
-window.addEventListener('storage', loadProducts);
 </script>
 
 <script>
@@ -1302,7 +1315,7 @@ document.querySelectorAll('.add-to-cart').forEach(btn => {
 });
 
 // Checkout
-document.getElementById('cartOrderForm').addEventListener('submit', function(e) {
+document.getElementById('cartOrderForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   const name = document.getElementById('cName').value.trim();
   const gov  = document.getElementById('cGov').value;
@@ -1310,9 +1323,27 @@ document.getElementById('cartOrderForm').addEventListener('submit', function(e) 
   const addr = document.getElementById('cAddr').value.trim();
   if (!name || !gov || !phone || !addr) { alert('يرجى تعبئة جميع الحقول'); return; }
 
-  const orders = JSON.parse(localStorage.getItem('icebath_orders') || '[]');
-  orders.push({ id: Date.now(), items: {...cart}, total: getTotal(), name, phone, gov, addr, date: new Date().toISOString(), status: 'جديد' });
-  localStorage.setItem('icebath_orders', JSON.stringify(orders));
+  // Build items array for API
+  const itemsArr = Object.entries(cart).map(([name, qty]) => ({
+    productName: name,
+    quantity: qty,
+    price: cartPrices[name] || PRICE
+  }));
+
+  try {
+    const r = await fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        customerName: name,
+        customerPhone: phone,
+        customerAddress: gov + ' — ' + addr,
+        items: itemsArr,
+        total: getTotal()
+      })
+    });
+    if (!r.ok) throw new Error('failed');
+  } catch { /* still show success to user */ }
 
   cart = {};
   renderCart();
