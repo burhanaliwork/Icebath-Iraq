@@ -30,6 +30,13 @@ app.use(express.urlencoded({ extended: true }));
 
 const isProd = process.env["NODE_ENV"] === "production";
 
+// Trust Northflank / Render / any reverse-proxy one hop away so that:
+//  - req.secure is true (needed for Secure cookies over HTTPS)
+//  - req.ip reflects the real client IP, not the proxy IP
+if (isProd) {
+  app.set("trust proxy", 1);
+}
+
 app.use(
   session({
     secret: process.env["SESSION_SECRET"] || "fallback-dev-secret",

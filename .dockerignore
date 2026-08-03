@@ -1,0 +1,28 @@
+# Version control
+.git
+.gitignore
+
+# Dependencies — reinstalled inside Docker
+node_modules
+**/node_modules
+
+# Built output — rebuilt inside Docker
+dist
+**/dist
+tmp
+
+# Replit-specific
+.replit
+.replitignore
+.cache/
+.local/
+.agents/
+attached_assets/
+
+# Dev tooling
+*.log
+.DS_Store
+Thumbs.db
+
+# TypeScript incremental build info
+*.tsbuildinfo
