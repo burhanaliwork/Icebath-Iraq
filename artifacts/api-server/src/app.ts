@@ -1,6 +1,7 @@
 import express, { type Express } from "express";
 import cors from "cors";
 import session from "express-session";
+import ConnectPgSimple from "connect-pg-simple";
 import pinoHttp from "pino-http";
 import { existsSync } from "node:fs";
 import { dirname, resolve } from "node:path";
@@ -41,19 +42,40 @@ if (isProd) {
   app.set("trust proxy", 1);
 }
 
-// NOTE: Using the default in-memory session store (MemoryStore).
-// This logs a warning in production and resets all sessions on every restart.
-// It is acceptable for a single-container deployment — sessions persist while
-// the container is running. To survive restarts, replace with connect-pg-simple
-// or a Redis store and set SESSION_STORE_URL accordingly.
+// ── Session store ─────────────────────────────────────────────────────────────
+// Use PostgreSQL to persist sessions so they survive container restarts.
+// Falls back to MemoryStore only when DATABASE_URL is not set (local dev without DB).
+const PgSession = ConnectPgSimple(session);
+
+const sessionStore = process.env["DATABASE_URL"]
+  ? new PgSession({
+      conString: process.env["DATABASE_URL"],
+      // connect-pg-simple creates the "session" table automatically on first use
+      // if it doesn't already exist (createTableIfMissing: true).
+      createTableIfMissing: true,
+      // Prune expired sessions every hour
+      pruneSessionInterval: 60 * 60,
+      // Use SSL in production (same config as the main DB pool)
+      pool: undefined, // let it create its own pool from conString
+    })
+  : undefined;
+
+if (isProd && !sessionStore) {
+  logger.warn("DATABASE_URL not set — sessions will use MemoryStore and be lost on restart");
+}
+
 app.use(
   session({
+    store: sessionStore,
     secret: process.env["SESSION_SECRET"] || "fallback-dev-secret",
     resave: false,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: isProd,           // true on Render (HTTPS), false in local dev
+      // In production, trust the X-Forwarded-Proto header set by the reverse proxy.
+      // "auto" means: secure if req.secure is true (which trust-proxy makes true over HTTPS).
+      // This avoids the bug where secure:true + HTTP access = browser never sends the cookie.
+      secure: isProd ? "auto" : false,
       maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: "lax",
     },
