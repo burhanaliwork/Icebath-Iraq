@@ -1355,7 +1355,9 @@ async function loadProducts() {
         </div>
         <div class="product-info">
           <h3>${escHtml(p.name)}</h3>
-          <button class="btn btn-primary" onclick="openDetail(${p.id})" style="width:100%;margin-top:.4rem;">عرض التفاصيل</button>
+          ${p.inStock
+            ? `<button class="btn btn-primary" onclick="openDetail(${p.id})" style="width:100%;margin-top:.4rem;">عرض التفاصيل</button>`
+            : `<div style="width:100%;text-align:center;padding:.65rem 0;margin-top:.4rem;color:#f87171;font-weight:800;font-size:.95rem;font-family:'Tajawal',sans-serif;background:rgba(239,68,68,.1);border:1.5px solid rgba(239,68,68,.25);border-radius:12px;">❌ نفذت الكمية</div>`}
         </div>
       </div>
     `).join('');

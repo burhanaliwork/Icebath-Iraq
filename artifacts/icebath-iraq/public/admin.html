@@ -150,27 +150,41 @@
   /* ── Orders ── */
   .orders-list{display:flex;flex-direction:column;gap:1.2rem;}
   .order-card{background:rgba(255,255,255,.05);border:1px solid rgba(59,191,255,.18);border-radius:18px;overflow:hidden;}
-  .order-header{padding:1rem 1.2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;border-bottom:1px solid rgba(59,191,255,.1);}
-  .order-id{font-size:.8rem;color:rgba(160,220,255,.5);}
-  .order-name{font-family:'Tajawal',sans-serif;font-weight:800;font-size:1rem;color:#e8f6ff;}
-  .order-phone{font-size:.88rem;color:#7fd6ff;direction:ltr;text-align:right;}
-  .order-total{font-family:'Tajawal',sans-serif;font-weight:900;font-size:1.15rem;color:#3bbfff;}
-  .order-date{font-size:.78rem;color:rgba(160,220,255,.45);}
-  .order-body{padding:1rem 1.2rem;}
-  .order-address{font-size:.88rem;color:rgba(160,220,255,.7);margin-bottom:.7rem;}
+  .order-header{padding:.8rem 1.2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;border-bottom:1px solid rgba(59,191,255,.1);}
+  .order-id{font-size:.78rem;color:rgba(160,220,255,.45);}
+  .order-total{font-family:'Tajawal',sans-serif;font-weight:900;font-size:1.1rem;color:#3bbfff;}
+  .order-body{padding:1.1rem 1.2rem;}
+  /* Customer info priority: phone → address → name */
+  .order-phone-big{
+    font-family:'Tajawal',sans-serif;font-weight:900;font-size:1.45rem;
+    color:#3bbfff;direction:ltr;text-align:right;margin-bottom:.55rem;letter-spacing:.02em;
+  }
+  .order-address{font-size:.9rem;color:rgba(160,220,255,.75);margin-bottom:.45rem;}
+  .order-name-row{font-family:'Tajawal',sans-serif;font-weight:700;font-size:.92rem;color:#e8f6ff;margin-bottom:.8rem;}
   .order-notes{font-size:.82rem;color:rgba(160,220,255,.5);font-style:italic;margin-bottom:.7rem;}
-  .order-items-list{background:rgba(0,0,0,.2);border-radius:10px;padding:.8rem 1rem;margin-bottom:.8rem;}
-  .order-item-row{display:flex;justify-content:space-between;font-size:.88rem;padding:.25rem 0;border-bottom:1px solid rgba(255,255,255,.05);}
-  .order-item-row:last-child{border-bottom:none;}
-  .status-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
-  .status-badge{padding:.3rem .9rem;border-radius:100px;font-size:.82rem;font-weight:700;}
-  .status-pending{background:rgba(234,179,8,.15);color:#fbbf24;border:1px solid rgba(234,179,8,.3);}
-  .status-confirmed{background:rgba(59,130,246,.15);color:#60a5fa;border:1px solid rgba(59,130,246,.3);}
+  /* Product cards in order */
+  .order-items-list{background:rgba(0,0,0,.18);border-radius:12px;padding:.6rem .9rem;margin-bottom:.9rem;}
+  .order-item-card{display:flex;gap:.85rem;align-items:center;padding:.55rem 0;border-bottom:1px solid rgba(255,255,255,.05);}
+  .order-item-card:last-child{border-bottom:none;}
+  .order-item-img{width:52px;height:52px;border-radius:10px;object-fit:cover;flex-shrink:0;background:#071e38;}
+  .order-item-img-ph{width:52px;height:52px;border-radius:10px;background:#071e38;display:flex;align-items:center;justify-content:center;color:rgba(127,214,255,.3);font-size:1.4rem;flex-shrink:0;}
+  .order-item-info{flex:1;}
+  .order-item-name{font-weight:700;color:#c8ecff;font-size:.9rem;margin-bottom:.2rem;}
+  .order-item-meta{font-size:.8rem;color:rgba(160,220,255,.6);}
+  /* Status */
+  .status-row{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;}
+  .status-badge{padding:.3rem 1rem;border-radius:100px;font-size:.82rem;font-weight:700;}
+  .status-undelivered{background:rgba(234,179,8,.15);color:#fbbf24;border:1px solid rgba(234,179,8,.3);}
   .status-delivered{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.3);}
-  .status-cancelled{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);}
-  .btn-status{padding:.28rem .8rem;border-radius:100px;background:rgba(255,255,255,.07);
-    border:1px solid rgba(255,255,255,.15);color:rgba(160,220,255,.7);font-size:.78rem;font-weight:600;transition:background .2s,border-color .2s;}
-  .btn-status:hover{background:rgba(59,191,255,.15);border-color:rgba(59,191,255,.4);color:#7fd6ff;}
+  .btn-status{
+    padding:.4rem 1.1rem;border-radius:100px;font-size:.85rem;font-weight:700;
+    font-family:'Tajawal',sans-serif;transition:transform .15s,box-shadow .2s;
+  }
+  .btn-status:hover{transform:translateY(-1px);}
+  .btn-status-delivered{background:rgba(34,197,94,.2);border:1.5px solid rgba(34,197,94,.5);color:#4ade80;}
+  .btn-status-delivered:hover{background:rgba(34,197,94,.35);box-shadow:0 4px 16px rgba(34,197,94,.25);}
+  .btn-status-undelivered{background:rgba(234,179,8,.15);border:1.5px solid rgba(234,179,8,.4);color:#fbbf24;}
+  .btn-status-undelivered:hover{background:rgba(234,179,8,.28);box-shadow:0 4px 16px rgba(234,179,8,.2);}
 
   /* ── Toast ── */
   .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);
@@ -613,52 +627,79 @@ async function deleteProduct(id, name) {
 }
 
 // ─── Orders ───────────────────────────────────────────
-const STATUS_LABELS = { pending: 'جديد', confirmed: 'مؤكد', delivered: 'مُسلَّم', cancelled: 'ملغي' };
-const STATUS_CLASS  = { pending: 'pending', confirmed: 'confirmed', delivered: 'delivered', cancelled: 'cancelled' };
+// Two statuses only: undelivered (default) and delivered
+const STATUS_LABELS = { undelivered: 'غير مسلم', delivered: 'مسلم' };
+const STATUS_CLASS  = { undelivered: 'undelivered', delivered: 'delivered' };
 
 async function loadOrders() {
-  const list = document.getElementById('ordersList');
+  const list  = document.getElementById('ordersList');
   const empty = document.getElementById('emptyOrdersState');
   list.innerHTML = '<div style="padding:2rem;text-align:center;"><span class="spinner"></span></div>';
   try {
-    const r = await fetch(API + '/api/admin/orders', { credentials: 'include' });
-    const orders = await r.json();
+    // Load orders + products (for thumbnail images) in parallel
+    const [ordersR, prodsR] = await Promise.all([
+      fetch(API + '/api/admin/orders',   { credentials: 'include' }),
+      fetch(API + '/api/admin/products', { credentials: 'include' }),
+    ]);
+    const orders = await ordersR.json();
+    const prods  = prodsR.ok ? await prodsR.json() : [];
+
+    // Build productId → imageUrl map
+    const imgMap = {};
+    prods.forEach(p => { imgMap[p.id] = p.imageUrl; });
+
     document.getElementById('ordersCount').textContent = '(' + orders.length + ')';
     if (!orders.length) { list.innerHTML = ''; empty.style.display = 'block'; return; }
     empty.style.display = 'none';
-    list.innerHTML = orders.map(o => `
-      <div class="order-card">
-        <div class="order-header">
-          <div>
-            <div class="order-id">#${o.id} &nbsp;•&nbsp; ${new Date(o.createdAt).toLocaleString('ar-IQ')}</div>
-            <div class="order-name">${escHtml(o.customerName)}</div>
-          </div>
-          <div style="text-align:left;">
-            <div class="order-phone">${escHtml(o.customerPhone)}</div>
-            <div class="order-total">${Number(o.total).toLocaleString('ar-IQ')} د.ع</div>
-          </div>
-        </div>
-        <div class="order-body">
-          <div class="order-address">📍 ${escHtml(o.customerAddress)}</div>
-          ${o.notes ? `<div class="order-notes">📝 ${escHtml(o.notes)}</div>` : ''}
-          <div class="order-items-list">
-            ${(o.items || []).map(i => `
-              <div class="order-item-row">
-                <span>${escHtml(i.productName)} × ${i.quantity}</span>
-                <span style="color:#7fd6ff;">${(i.price * i.quantity).toLocaleString('ar-IQ')} د.ع</span>
-              </div>
-            `).join('')}
-          </div>
-          <div class="status-row">
-            <span class="status-badge status-${STATUS_CLASS[o.status] || 'pending'}">${STATUS_LABELS[o.status] || o.status}</span>
-            ${['pending','confirmed','delivered','cancelled'].filter(s => s !== o.status).map(s => `
-              <button class="btn-status" onclick="updateOrderStatus(${o.id},'${s}')">${STATUS_LABELS[s]}</button>
-            `).join('')}
+
+    list.innerHTML = orders.map(o => {
+      const statusKey   = STATUS_CLASS[o.status]  ? o.status : 'undelivered';
+      const statusLabel = STATUS_LABELS[statusKey];
+      const otherStatus = statusKey === 'undelivered' ? 'delivered' : 'undelivered';
+
+      const itemsHtml = (o.items || []).map(i => `
+        <div class="order-item-card">
+          ${imgMap[i.productId]
+            ? `<img src="${escHtml(imgMap[i.productId])}" alt="" class="order-item-img">`
+            : `<div class="order-item-img-ph">❄</div>`}
+          <div class="order-item-info">
+            <div class="order-item-name">${escHtml(i.productName)}</div>
+            <div class="order-item-meta">× ${i.quantity} &nbsp;•&nbsp; <span style="color:#7fd6ff;">${(i.price * i.quantity).toLocaleString('ar-IQ')} د.ع</span></div>
           </div>
         </div>
-      </div>
-    `).join('');
-  } catch { list.innerHTML = '<p style="text-align:center;color:#ff6b6b;padding:2rem;">تعذر تحميل الطلبات</p>'; }
+      `).join('');
+
+      return `
+        <div class="order-card">
+          <!-- Header: order number + date + total -->
+          <div class="order-header">
+            <div>
+              <div class="order-id">#${o.id} &nbsp;•&nbsp; ${new Date(o.createdAt).toLocaleString('ar-IQ')}</div>
+              <div class="order-total">${Number(o.total).toLocaleString('ar-IQ')} د.ع</div>
+            </div>
+            <span class="status-badge status-${statusKey}">${statusLabel}</span>
+          </div>
+          <!-- Body: phone (top) → address → name → products → action -->
+          <div class="order-body">
+            <div class="order-phone-big">📞 ${escHtml(o.customerPhone)}</div>
+            <div class="order-address">📍 ${escHtml(o.customerAddress)}</div>
+            <div class="order-name-row">👤 ${escHtml(o.customerName)}</div>
+            ${o.notes ? `<div class="order-notes">📝 ${escHtml(o.notes)}</div>` : ''}
+            <div class="order-items-list">${itemsHtml}</div>
+            <div class="status-row">
+              <button class="btn-status btn-status-${otherStatus}"
+                onclick="updateOrderStatus(${o.id},'${otherStatus}')">
+                ${STATUS_LABELS[otherStatus]}
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  } catch (err) {
+    console.error('loadOrders error:', err);
+    list.innerHTML = '<p style="text-align:center;color:#ff6b6b;padding:2rem;">تعذر تحميل الطلبات</p>';
+  }
 }
 
 async function updateOrderStatus(id, status) {

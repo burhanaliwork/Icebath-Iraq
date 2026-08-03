@@ -8,7 +8,7 @@ export const ordersTable = pgTable("orders", {
   customerPhone: text("customer_phone").notNull(),
   customerAddress: text("customer_address").notNull(),
   total: integer("total").notNull(),
-  status: text("status").notNull().default("pending"),
+  status: text("status").notNull().default("undelivered"),
   notes: text("notes"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
