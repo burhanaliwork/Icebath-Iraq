@@ -15,16 +15,30 @@ import { db, sessionsTable } from "@workspace/db";
 // separate pg.Pool, no connect-pg-simple, no extra SSL configuration needed.
 // The "session" table is created by drizzle-kit push which runs on every boot.
 class DrizzleStore extends Store {
-  // Prune expired rows once per hour
-  constructor() {
-    super();
-    setInterval(async () => {
-      try {
-        await db.delete(sessionsTable).where(lt(sessionsTable.expire, new Date()));
-      } catch (err) {
+  // Do not run a timer while the site is idle. Expired rows are pruned
+  // opportunistically when a new session is written instead.
+  private lastPrunedAt = 0;
+  private pruneInFlight: Promise<void> | null = null;
+
+  private pruneExpiredIfDue(): Promise<void> {
+    const now = Date.now();
+    if (now - this.lastPrunedAt < 60 * 60 * 1000) return Promise.resolve();
+    const inFlight = this.pruneInFlight;
+    if (inFlight) return inFlight;
+
+    this.lastPrunedAt = now;
+    const prune = db.delete(sessionsTable)
+      .where(lt(sessionsTable.expire, new Date()))
+      .then(() => undefined)
+      .catch((err: unknown) => {
         logger.warn({ err }, "Session prune failed (non-fatal)");
-      }
-    }, 60 * 60 * 1000).unref();
+      })
+      .finally(() => {
+        this.pruneInFlight = null;
+      });
+
+    this.pruneInFlight = prune;
+    return prune;
   }
 
   get(sid: string, cb: (err: any, session?: any) => void): void {
@@ -47,17 +61,21 @@ class DrizzleStore extends Store {
         ? session.cookie.expires
         : new Date(Date.now() + (session.cookie?.maxAge ?? 7 * 24 * 60 * 60 * 1000));
 
-    db.insert(sessionsTable)
-      .values({ sid, sess: session, expire })
-      .onConflictDoUpdate({
-        target: sessionsTable.sid,
-        set: { sess: session, expire },
-      })
-      .then(() => cb?.())
-      .catch((err) => {
+    void (async () => {
+      try {
+        await this.pruneExpiredIfDue();
+        await db.insert(sessionsTable)
+          .values({ sid, sess: session, expire })
+          .onConflictDoUpdate({
+            target: sessionsTable.sid,
+            set: { sess: session, expire },
+          });
+        cb?.();
+      } catch (err) {
         logger.error({ err, sid }, "Session SET error");
         cb?.(err);
-      });
+      }
+    })();
   }
 
   destroy(sid: string, cb?: (err?: any) => void): void {

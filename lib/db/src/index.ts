@@ -22,6 +22,13 @@ const sslConfig =
 export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ...sslConfig,
+  // Keep the pool intentionally small: this app has a very low request volume.
+  // Explicit timeouts prevent idle clients from lingering against Neon.
+  max: 3,
+  idleTimeoutMillis: 5_000,
+  connectionTimeoutMillis: 10_000,
+  maxLifetimeSeconds: 300,
+  allowExitOnIdle: true,
 });
 export const db = drizzle(pool, { schema });
 
